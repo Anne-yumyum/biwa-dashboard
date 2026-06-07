@@ -3,13 +3,8 @@ import type { SunData, DataResult } from '@/types'
 const LAT = 35.0
 const LON = 135.9
 
-function toJST(utcIso: string): string {
-  const d = new Date(utcIso)
-  return d.toLocaleTimeString('ja-JP', {
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'Asia/Tokyo',
-  })
+function toJST(dateStr: string): string {
+  return dateStr.slice(11, 16)
 }
 
 export async function fetchSun(): Promise<DataResult<SunData>> {
