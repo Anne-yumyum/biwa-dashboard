@@ -1,65 +1,77 @@
-import Image from "next/image";
+import { Suspense } from 'react'
+import { Header } from '@/components/layout/Header'
+import { WindCard } from '@/components/cards/WindCard'
+import { WeatherCard } from '@/components/cards/WeatherCard'
+import { TemperatureCard } from '@/components/cards/TemperatureCard'
+import { LakeLevelCard } from '@/components/cards/LakeLevelCard'
+import { DischargeCard } from '@/components/cards/DischargeCard'
+import { TideCard } from '@/components/cards/TideCard'
+import { SunCard } from '@/components/cards/SunCard'
+import { RefreshTimer } from '@/components/ui/RefreshTimer'
 
-export default function Home() {
+export const revalidate = 0
+
+function now() {
+  return new Date().toLocaleTimeString('ja-JP', {
+    hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo',
+  })
+}
+
+function Skeleton() {
+  return <div className="card" style={{ background: '#0d1a27', animation: 'pulse 1.5s ease-in-out infinite' }} />
+}
+
+export default function DashboardPage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: '#e8f2f8' }}>
+      <Header updatedAt={now()} />
+      <RefreshTimer intervalMs={300_000} />
+
+      {/* ── No-scroll cockpit grid ── */}
+      <main style={{
+        flex: 1,
+        display: 'grid',
+        gridTemplateRows: '1fr 1fr 1fr 1fr',
+        gridTemplateColumns: '1fr',
+        gap: 4,
+        padding: '4px 4px',
+        minHeight: 0,
+      }}>
+        {/* Row 1: Wind (full width) */}
+        <Suspense fallback={<Skeleton />}>
+          <WindCard />
+        </Suspense>
+
+        {/* Row 2: 天気 | 気温 */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, minHeight: 0 }}>
+          <Suspense fallback={<Skeleton />}><WeatherCard /></Suspense>
+          <Suspense fallback={<Skeleton />}><TemperatureCard /></Suspense>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Row 3: 日の出 | 水位 */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, minHeight: 0 }}>
+          <Suspense fallback={<Skeleton />}><SunCard /></Suspense>
+          <Suspense fallback={<Skeleton />}><LakeLevelCard /></Suspense>
+        </div>
+
+        {/* Row 4: 放流量 | 潮汐 */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, minHeight: 0 }}>
+          <Suspense fallback={<Skeleton />}><DischargeCard /></Suspense>
+          <TideCard />
         </div>
       </main>
+
+      {/* Footer: data source */}
+      <div style={{
+        padding: '3px 8px',
+        paddingBottom: 'max(3px, env(safe-area-inset-bottom))',
+        borderTop: '1px solid #c8dde8',
+        display: 'flex', alignItems: 'center', gap: 4,
+      }}>
+        <p style={{ fontSize: 9, color: '#2a4a60', letterSpacing: '0.03em' }}>
+          気象: Open-Meteo　水位: 国土交通省　潮汐: 敦賀港参考値（天文計算）
+        </p>
+      </div>
     </div>
-  );
+  )
 }

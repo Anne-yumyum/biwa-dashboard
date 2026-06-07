@@ -1,6 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 琵琶湖ビワマスコンディション
 
-## Getting Started
+琵琶湖の風・天気・水位・水温を1画面で確認できる出船前チェックアプリ。
+
+## セットアップ
+
+```bash
+npm install
+npm run dev
+```
+
+## 環境変数
+
+現在のバージョンでは外部APIキーは不要（Open-Meteo は無料・キーなし）。将来の拡張時は `.env.local` を使用：
+
+```
+OPEN_METEO_API_KEY=（将来用）
+```
+
+## 利用データソース
+
+| データ | ソース | 更新頻度 |
+|--------|--------|----------|
+| 天気・風・日の出 | Open-Meteo (open-meteo.com) | 10分キャッシュ |
+| 琵琶湖水位 | 水資源機構 琵琶湖総合管理所 | 30分キャッシュ |
+| 琵琶湖水温 | 国土交通省 水文水質データベース | 1時間キャッシュ |
+| 潮汐 | 天文計算（大阪港調和定数） | 計算値（参考） |
+| 波高 | なし（公開APIなし） | - |
+
+## デプロイ方法（Vercel）
+
+1. GitHub にプッシュ
+2. Vercel (vercel.com) でリポジトリをインポート
+3. Framework: Next.js（自動検出）
+4. そのままデプロイ（環境変数は現時点で不要）
+
+---
+
+Original Next.js README below:
 
 First, run the development server:
 
