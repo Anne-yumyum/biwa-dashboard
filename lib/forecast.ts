@@ -60,8 +60,8 @@ export async function fetchWeeklyForecast(): Promise<DailyForecast[]> {
       windSpeedMax: Math.round(d.wind_speed_10m_max[i] * 10) / 10,
       windDirection: d.wind_direction_10m_dominant[i],
       windDirectionLabel: decodeWindDirection(d.wind_direction_10m_dominant[i]),
-      sunrise: new Date(d.sunrise[i]).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo' }),
-      sunset: new Date(d.sunset[i]).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo' }),
+      sunrise: String(d.sunrise[i]),
+      sunset: String(d.sunset[i]),
     }
   })
 }
