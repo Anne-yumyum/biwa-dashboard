@@ -20,6 +20,10 @@ export interface DailyForecast {
 
 const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土']
 
+function toJST(dateStr: string): string {
+  return dateStr.slice(11, 16)
+}
+
 export async function fetchWeeklyForecast(): Promise<DailyForecast[]> {
   const url = new URL('https://api.open-meteo.com/v1/forecast')
   url.searchParams.set('latitude', String(LAT))
@@ -60,8 +64,8 @@ export async function fetchWeeklyForecast(): Promise<DailyForecast[]> {
       windSpeedMax: Math.round(d.wind_speed_10m_max[i] * 10) / 10,
       windDirection: d.wind_direction_10m_dominant[i],
       windDirectionLabel: decodeWindDirection(d.wind_direction_10m_dominant[i]),
-      sunrise: String(d.sunrise[i]),
-      sunset: String(d.sunset[i]),
+      sunrise: toJST(d.sunrise[i]),
+      sunset: toJST(d.sunset[i]),
     }
   })
 }
