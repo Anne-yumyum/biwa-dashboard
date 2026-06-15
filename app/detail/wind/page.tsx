@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import { fetchWeather, decodeWindDirection, windArrowRotation } from '@/lib/weather'
 import { fetchWeeklyForecast } from '@/lib/forecast'
+import { DetailHeader } from '@/components/layout/DetailHeader'
 
 function WindArrow({ deg, size = 28 }: { deg: number; size?: number }) {
   const rotation = windArrowRotation(deg)
@@ -31,11 +31,7 @@ export default async function WindDetailPage() {
 
   return (
     <div className="flex flex-col min-h-dvh bg-lake-50">
-      {/* ヘッダー */}
-      <header className="bg-lake-900 text-white px-4 pt-safe-top pb-3 flex items-center gap-3">
-        <Link href="/" className="text-lake-300 text-2xl leading-none">‹</Link>
-        <h1 className="text-base font-bold">風 詳細</h1>
-      </header>
+      <DetailHeader title="風 詳細" />
 
       <main className="flex-1 px-3 py-4 space-y-4 max-w-2xl mx-auto w-full">
         {/* 現在値 */}
