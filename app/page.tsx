@@ -48,16 +48,16 @@ export default function DashboardPage() {
           <Suspense fallback={<Skeleton />}><TemperatureCard /></Suspense>
         </div>
 
-        {/* Row 3: 日の出 | 水位 */}
+        {/* Row 3: 日の出 | 潮汐 */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, minHeight: 0 }}>
           <Suspense fallback={<Skeleton />}><SunCard /></Suspense>
-          <Suspense fallback={<Skeleton />}><LakeLevelCard /></Suspense>
+          <TideCard />
         </div>
 
-        {/* Row 4: 放流量 | 潮汐 */}
+        {/* Row 4: 水位 | 放流量 */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, minHeight: 0 }}>
+          <Suspense fallback={<Skeleton />}><LakeLevelCard /></Suspense>
           <Suspense fallback={<Skeleton />}><DischargeCard /></Suspense>
-          <TideCard />
         </div>
       </main>
 

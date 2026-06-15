@@ -13,7 +13,7 @@ export async function TemperatureCard() {
   const { temperature, feelsLike } = result.data
 
   return (
-    <Link href="/detail/weather" className="card" style={{ textDecoration: 'none' }}>
+    <Link href="/detail/temperature" className="card" style={{ textDecoration: 'none' }}>
       <p className="card-label">🌡️ 気温</p>
       <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end', marginTop: 2 }}>
         <div>
