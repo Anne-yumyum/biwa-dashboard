@@ -7,11 +7,10 @@ interface HeaderProps {
 export function Header({ updatedAt }: HeaderProps) {
   return (
     <header
-      className="pt-safe"
       style={{
         background: '#0a3358',
         borderBottom: '1px solid rgba(100,160,220,0.3)',
-        padding: '0 12px 8px',
+        padding: `max(8px, env(safe-area-inset-top)) 12px 8px`,
       }}
     >
       <div className="flex items-center justify-between" style={{ paddingTop: 10 }}>

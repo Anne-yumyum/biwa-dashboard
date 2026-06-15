@@ -6,7 +6,10 @@ interface DetailHeaderProps {
 
 export function DetailHeader({ title }: DetailHeaderProps) {
   return (
-    <header className="bg-lake-900 text-white px-4 pt-safe-top pb-3 flex items-center gap-3">
+    <header
+      className="bg-lake-900 text-white px-4 pb-3 flex items-center gap-3"
+      style={{ paddingTop: 'max(8px, env(safe-area-inset-top))' }}
+    >
       <Link href="/" className="flex items-center justify-center w-10 h-10 rounded hover:bg-lake-800 transition-colors">
         <span className="text-2xl leading-none">‹</span>
       </Link>

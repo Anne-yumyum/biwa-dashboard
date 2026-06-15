@@ -33,8 +33,8 @@ export default function DashboardPage() {
         display: 'grid',
         gridTemplateRows: '1fr 1fr 1fr 1fr',
         gridTemplateColumns: '1fr',
-        gap: 4,
-        padding: '4px 4px',
+        gap: 6,
+        padding: '8px 8px',
         minHeight: 0,
       }}>
         {/* Row 1: Wind (full width) */}
@@ -63,8 +63,8 @@ export default function DashboardPage() {
 
       {/* Footer: data source */}
       <div style={{
-        padding: '3px 8px',
-        paddingBottom: 'max(3px, env(safe-area-inset-bottom))',
+        padding: '6px 8px',
+        paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
         borderTop: '1px solid #c8dde8',
         display: 'flex', alignItems: 'center', gap: 4,
       }}>
