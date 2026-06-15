@@ -1,10 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="80" fill="#0a3358"/>
-  <!-- Lake waves -->
-  <path d="M64 320 Q128 290 192 320 Q256 350 320 320 Q384 290 448 320 L448 420 Q384 390 320 420 Q256 450 192 420 Q128 390 64 420 Z" fill="#38aef4" opacity="0.7"/>
-  <path d="M64 360 Q128 330 192 360 Q256 390 320 360 Q384 330 448 360 L448 460 Q384 430 320 460 Q256 490 192 460 Q128 430 64 460 Z" fill="#0273bc" opacity="0.8"/>
-  <!-- Fish silhouette -->
-  <ellipse cx="256" cy="220" rx="90" ry="40" fill="#7ec8f8"/>
-  <path d="M346 220 L390 190 L390 250 Z" fill="#7ec8f8"/>
-  <circle cx="220" cy="210" r="8" fill="#0a3358"/>
+  <!-- Background -->
+  <rect width="512" height="512" rx="100" fill="#0a3358"/>
+
+  <!-- Lake water gradient effect -->
+  <defs>
+    <linearGradient id="waveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#38aef4;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#0273bc;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Lake waves (bottom section) -->
+  <path d="M40 320 Q100 280 160 320 Q220 360 280 320 Q340 280 400 320 Q460 360 512 320 L512 512 Q460 480 400 512 Q340 544 280 512 Q220 480 160 512 Q100 480 40 512 Z" fill="url(#waveGrad)"/>
+
+  <!-- Fish body -->
+  <ellipse cx="256" cy="200" rx="100" ry="50" fill="#7ec8f8" opacity="0.95"/>
+
+  <!-- Fish tail -->
+  <path d="M356 200 L420 150 L420 250 Z" fill="#7ec8f8" opacity="0.85"/>
+
+  <!-- Fish details -->
+  <circle cx="200" cy="190" r="10" fill="#ffffff" opacity="0.8"/>
+  <circle cx="200" cy="190" r="6" fill="#0a3358"/>
+
+  <!-- Fishing rod -->
+  <line x1="100" y1="80" x2="200" y2="190" stroke="#fbbf24" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+  <circle cx="95" cy="75" r="12" fill="#fbbf24" opacity="0.9"/>
 </svg>
