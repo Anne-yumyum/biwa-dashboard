@@ -41,7 +41,7 @@ export default async function WeatherDetailPage() {
 
         {forecastData.length > 0 && (
           <div className="card">
-            <p className="card-label mb-3">7日間予報</p>
+            <p className="card-label mb-3">10日間予報</p>
             <div className="space-y-2">
               {forecastData.map((day, i) => (
                 <div key={i} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">

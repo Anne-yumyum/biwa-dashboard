@@ -24,6 +24,37 @@ function toJST(dateStr: string): string {
   return dateStr.slice(11, 16)
 }
 
+export interface HourlyWind {
+  hour: string       // HH:00
+  speed: number      // m/s
+  gust: number       // m/s
+  direction: number  // degrees
+  directionLabel: string
+}
+
+export async function fetchHourlyWind(): Promise<HourlyWind[]> {
+  const url = new URL('https://api.open-meteo.com/v1/forecast')
+  url.searchParams.set('latitude', String(LAT))
+  url.searchParams.set('longitude', String(LON))
+  url.searchParams.set('hourly', 'wind_speed_10m,wind_gusts_10m,wind_direction_10m')
+  url.searchParams.set('timezone', 'Asia/Tokyo')
+  url.searchParams.set('wind_speed_unit', 'ms')
+  url.searchParams.set('forecast_days', '1')
+
+  const res = await fetch(url.toString(), { next: { revalidate: 600 } })
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  const json = await res.json()
+  const h = json.hourly
+
+  return (h.time as string[]).map((t: string, i: number) => ({
+    hour: t.slice(11, 16),
+    speed: Math.round(h.wind_speed_10m[i] * 10) / 10,
+    gust: Math.round(h.wind_gusts_10m[i] * 10) / 10,
+    direction: h.wind_direction_10m[i],
+    directionLabel: decodeWindDirection(h.wind_direction_10m[i]),
+  }))
+}
+
 export async function fetchWeeklyForecast(): Promise<DailyForecast[]> {
   const url = new URL('https://api.open-meteo.com/v1/forecast')
   url.searchParams.set('latitude', String(LAT))
@@ -40,7 +71,7 @@ export async function fetchWeeklyForecast(): Promise<DailyForecast[]> {
   ].join(','))
   url.searchParams.set('timezone', 'Asia/Tokyo')
   url.searchParams.set('wind_speed_unit', 'ms')
-  url.searchParams.set('forecast_days', '7')
+  url.searchParams.set('forecast_days', '10')
 
   const res = await fetch(url.toString(), { next: { revalidate: 3600 } })
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
