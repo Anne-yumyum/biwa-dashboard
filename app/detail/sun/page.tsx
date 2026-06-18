@@ -13,10 +13,10 @@ export default async function SunDetailPage() {
   const forecastData = forecast.status === 'fulfilled' ? forecast.value : []
 
   return (
-    <div className="flex flex-col min-h-dvh bg-lake-50">
+    <div className="flex flex-col h-dvh bg-lake-50">
       <DetailHeader title="日の出・日の入り 詳細" />
 
-      <main className="flex-1 px-3 py-4 space-y-4 max-w-2xl mx-auto w-full">
+      <main className="flex-1 overflow-y-auto px-3 py-4 space-y-4 max-w-2xl mx-auto w-full">
         {/* 今日 */}
         {sun && (
           <div className="card">

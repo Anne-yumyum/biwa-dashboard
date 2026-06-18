@@ -8,10 +8,10 @@ export default function TideDetailPage() {
   const lows = entries.filter(e => e.type === 'low')
 
   return (
-    <div className="flex flex-col min-h-dvh bg-lake-50">
+    <div className="flex flex-col h-dvh bg-lake-50">
       <DetailHeader title="潮汐 詳細" />
 
-      <main className="flex-1 px-3 py-4 space-y-4 max-w-2xl mx-auto w-full">
+      <main className="flex-1 overflow-y-auto px-3 py-4 space-y-4 max-w-2xl mx-auto w-full">
         <div className="card">
           <p className="card-label mb-3">本日の潮汐（敦賀港参考値）</p>
           <div className="grid grid-cols-2 gap-4">

@@ -14,10 +14,10 @@ export default async function WeatherDetailPage() {
   const { emoji, label } = weather ? decodeWeatherCode(weather.weatherCode) : { emoji: '?', label: '不明' }
 
   return (
-    <div className="flex flex-col min-h-dvh bg-lake-50">
+    <div className="flex flex-col h-dvh bg-lake-50">
       <DetailHeader title="天気 詳細" />
 
-      <main className="flex-1 px-3 py-4 space-y-4 max-w-2xl mx-auto w-full">
+      <main className="flex-1 overflow-y-auto px-3 py-4 space-y-4 max-w-2xl mx-auto w-full">
         {weather ? (
           <div className="card">
             <p className="card-label mb-3">現在の天気</p>

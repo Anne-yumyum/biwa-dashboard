@@ -53,10 +53,10 @@ export default async function TemperatureDetailPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-dvh bg-lake-50">
+    <div className="flex flex-col h-dvh bg-lake-50">
       <DetailHeader title="現在の気温" />
 
-      <main className="flex-1 px-3 py-4 space-y-4 max-w-2xl mx-auto w-full">
+      <main className="flex-1 overflow-y-auto px-3 py-4 space-y-4 max-w-2xl mx-auto w-full">
         {hourly ? (
           <>
             {/* サマリー */}

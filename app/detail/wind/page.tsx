@@ -38,10 +38,10 @@ export default async function WindDetailPage() {
   const hourly = hourlyResult.status === 'fulfilled' ? hourlyResult.value : []
 
   return (
-    <div className="flex flex-col min-h-dvh bg-lake-50">
+    <div className="flex flex-col h-dvh bg-lake-50">
       <DetailHeader title="風 詳細" />
 
-      <main className="flex-1 px-3 py-4 space-y-4 max-w-2xl mx-auto w-full">
+      <main className="flex-1 overflow-y-auto px-3 py-4 space-y-4 max-w-2xl mx-auto w-full">
 
         {/* 現在値 */}
         {weather ? (
