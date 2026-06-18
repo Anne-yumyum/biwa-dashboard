@@ -11,7 +11,7 @@ export async function LakeLevelCard() {
       <a href={EXTERNAL_URL} target="_blank" rel="noopener noreferrer"
         className="card" style={{ textDecoration: 'none', borderTop: '2px solid #f59e0b' }}>
         <p className="card-label">📊 琵琶湖水位</p>
-        <p style={{ fontSize: 14, fontWeight: 700, color: '#d97706', marginTop: 4 }}>タップして確認 ↗</p>
+        <p style={{ fontSize: 14, fontWeight: 700, color: '#d97706', marginTop: 6 }}>タップして確認 ↗</p>
         <p style={{ fontSize: 10, color: '#94a3b8', marginTop: 2 }}>国土交通省 水文水質DB</p>
       </a>
     )
@@ -26,19 +26,20 @@ export async function LakeLevelCard() {
     <Link href="/detail/lake-level" className="card"
       style={{ textDecoration: 'none', borderTop: '2px solid #0284c7' }}>
       <p className="card-label">📊 琵琶湖水位 ›</p>
-      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end', marginTop: 2 }}>
+      <div style={{ display: 'flex', gap: 14, alignItems: 'flex-end', marginTop: 4 }}>
         <div>
           <p className="data-label">現在水位</p>
-          <p className="data-value" style={{ fontSize: '1.8rem' }}>
-            {sign}{current}<span className="data-unit">cm</span>
+          <p style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>
+            {sign}{current}<span style={{ fontSize: 11, fontWeight: 600, color: '#64748b', marginLeft: 1 }}>cm</span>
           </p>
-          <p style={{ fontSize: 9, color: '#94a3b8' }}>BSL基準</p>
+          <p style={{ fontSize: 9, color: '#94a3b8', marginTop: 1 }}>BSL基準</p>
         </div>
         {diffFromYesterday !== null && (
           <div>
             <p className="data-label">前日比</p>
-            <p className="data-value" style={{ fontSize: '1.4rem', color: diffColor }}>
-              {diffFromYesterday >= 0 ? '+' : ''}{diffFromYesterday}<span className="data-unit">cm</span>
+            <p style={{ fontSize: '1.3rem', fontWeight: 700, color: diffColor, lineHeight: 1 }}>
+              {diffFromYesterday >= 0 ? '+' : ''}{diffFromYesterday}
+              <span style={{ fontSize: 10, fontWeight: 600, color: '#94a3b8', marginLeft: 1 }}>cm</span>
             </p>
           </div>
         )}

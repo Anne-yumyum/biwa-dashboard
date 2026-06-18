@@ -15,16 +15,16 @@ export async function SunCard() {
   return (
     <Link href="/detail/sun" className="card" style={{ textDecoration: 'none' }}>
       <p className="card-label">☀️ 日の出・日の入り ›</p>
-      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end', marginTop: 2 }}>
+      <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
         <div>
           <p className="data-label" style={{ color: '#b45309' }}>日の出</p>
-          <p className="data-value" style={{ fontSize: '1.5rem', color: '#b45309', fontFamily: 'monospace' }}>
+          <p style={{ fontSize: '1.3rem', fontWeight: 800, color: '#b45309', fontFamily: 'monospace', lineHeight: 1 }}>
             {sunrise}
           </p>
         </div>
         <div>
           <p className="data-label" style={{ color: '#9a3412' }}>日の入り</p>
-          <p className="data-value" style={{ fontSize: '1.5rem', color: '#9a3412', fontFamily: 'monospace' }}>
+          <p style={{ fontSize: '1.3rem', fontWeight: 800, color: '#9a3412', fontFamily: 'monospace', lineHeight: 1 }}>
             {sunset}
           </p>
         </div>

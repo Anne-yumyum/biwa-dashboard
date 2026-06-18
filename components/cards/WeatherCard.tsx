@@ -16,19 +16,21 @@ export async function WeatherCard() {
   return (
     <Link href="/detail/weather" className="card" style={{ textDecoration: 'none' }}>
       <p className="card-label">天気 ›</p>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 2 }}>
-        <span style={{ fontSize: 26, lineHeight: 1 }}>{emoji}</span>
-        <div>
-          <p style={{ fontSize: 15, fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>{label}</p>
-          <div style={{ display: 'flex', gap: 6, marginTop: 3 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: '#dc2626' }}>{tempMax}℃</span>
-            <span style={{ fontSize: 11, fontWeight: 700, color: '#2563eb' }}>{tempMin}℃</span>
-          </div>
+      {/* 天気アイコン＋ラベル */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
+        <span style={{ fontSize: 28, lineHeight: 1, flexShrink: 0 }}>{emoji}</span>
+        <p style={{ fontSize: 18, fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>{label}</p>
+      </div>
+      {/* 気温＋降水確率 */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 6 }}>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color: '#dc2626' }}>{tempMax}℃</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: '#2563eb' }}>{tempMin}℃</span>
         </div>
-        <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
+        <div style={{ textAlign: 'right' }}>
           <p className="data-label">降水確率</p>
-          <p style={{ fontSize: 22, fontWeight: 800, color: '#0369a1', lineHeight: 1 }}>
-            {precipitationProbability}<span style={{ fontSize: 11, color: '#64748b' }}>%</span>
+          <p style={{ fontSize: 20, fontWeight: 800, color: '#0369a1', lineHeight: 1 }}>
+            {precipitationProbability}<span style={{ fontSize: 11, color: '#64748b', marginLeft: 1 }}>%</span>
           </p>
         </div>
       </div>

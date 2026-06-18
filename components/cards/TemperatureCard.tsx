@@ -15,15 +15,17 @@ export async function TemperatureCard() {
   return (
     <Link href="/detail/temperature" className="card" style={{ textDecoration: 'none' }}>
       <p className="card-label">🌡️ 気温</p>
-      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end', marginTop: 2 }}>
+      <div style={{ display: 'flex', gap: 14, alignItems: 'flex-end', marginTop: 4 }}>
         <div>
           <p className="data-label">現在</p>
-          <p className="data-value">{temperature}<span className="data-unit">℃</span></p>
+          <p style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>
+            {temperature}<span style={{ fontSize: 11, fontWeight: 600, color: '#64748b', marginLeft: 1 }}>℃</span>
+          </p>
         </div>
         <div>
           <p className="data-label">体感</p>
-          <p className="data-value" style={{ fontSize: '1.5rem', color: '#475569' }}>
-            {feelsLike}<span className="data-unit">℃</span>
+          <p style={{ fontSize: '1.3rem', fontWeight: 700, color: '#475569', lineHeight: 1 }}>
+            {feelsLike}<span style={{ fontSize: 10, fontWeight: 600, color: '#94a3b8', marginLeft: 1 }}>℃</span>
           </p>
         </div>
       </div>
