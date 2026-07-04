@@ -4,6 +4,7 @@ import { LakeLevelCard } from '@/components/cards/LakeLevelCard'
 import { DischargeCard } from '@/components/cards/DischargeCard'
 import { TideCard } from '@/components/cards/TideCard'
 import { SunCard } from '@/components/cards/SunCard'
+import { DepthMapCard } from '@/components/cards/DepthMapCard'
 import { RefreshTimer } from '@/components/ui/RefreshTimer'
 import { WarningBanner } from '@/components/ui/WarningBanner'
 import { AreaTabs } from '@/components/AreaTabs'
@@ -54,6 +55,9 @@ export default function DashboardPage() {
           <Suspense fallback={<Skeleton />}><LakeLevelCard /></Suspense>
           <Suspense fallback={<Skeleton />}><DischargeCard /></Suspense>
         </div>
+
+        {/* 等深線 */}
+        <DepthMapCard />
       </main>
 
       {/* Footer: data source */}
