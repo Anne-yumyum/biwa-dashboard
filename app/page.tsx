@@ -4,7 +4,7 @@ import { SunCard } from '@/components/cards/SunCard'
 import { TideCard } from '@/components/cards/TideCard'
 import { RefreshTimer } from '@/components/ui/RefreshTimer'
 import { WarningBanner } from '@/components/ui/WarningBanner'
-import { BiwaLakeMap } from '@/components/map/BiwaLakeMap'
+import { AreaTabs } from '@/components/AreaTabs'
 
 // 5分キャッシュ: 毎リクエストのAPI乱打を防ぐ
 export const revalidate = 300
@@ -40,16 +40,8 @@ export default async function DashboardPage() {
         minHeight: 0,
         overflowY: 'auto',
       }}>
-        {/* 琵琶湖マップ */}
-        <div className="card" style={{ flex: '0 0 auto', padding: '10px 8px 8px' }}>
-          <p className="card-label" style={{ marginBottom: 6, fontSize: 12 }}>
-            🗾 琵琶湖 エリア選択
-          </p>
-          <BiwaLakeMap />
-          <p style={{ fontSize: 9, color: '#94a3b8', textAlign: 'center', marginTop: 4 }}>
-            エリアをタップして詳細を確認
-          </p>
-        </div>
+        {/* エリア別タブ（ブラウザから直接取得） */}
+        <AreaTabs />
 
         {/* 日の出 | 潮汐 */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, flexShrink: 0 }}>
