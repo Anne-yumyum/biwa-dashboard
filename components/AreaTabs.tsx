@@ -135,18 +135,23 @@ export function AreaTabs() {
               onClick={() => setActiveId(area.id)}
               style={{
                 flex: 1,
-                padding: '10px 0 8px',
+                minWidth: 0,
+                padding: '6px 4px',
                 background: active ? '#0a3358' : 'transparent',
                 color: active ? '#fff' : '#475569',
                 border: 'none',
-                borderBottom: active ? '3px solid #2d9cdb' : '3px solid transparent',
-                fontSize: 13,
+                borderBottom: active ? '2px solid #2d9cdb' : '2px solid transparent',
+                fontSize: 11,
                 fontWeight: 800,
                 cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
-              {area.shortName}
-              <span style={{ display: 'block', fontSize: 9, fontWeight: 600, opacity: 0.75, marginTop: 1 }}>
+              <span style={{ lineHeight: 1 }}>{area.shortName}</span>
+              <span style={{ fontSize: 8, fontWeight: 600, opacity: 0.7, marginTop: 2, lineHeight: 1 }}>
                 {area.name.replace(/^.（|）$/g, '')}
               </span>
             </button>
