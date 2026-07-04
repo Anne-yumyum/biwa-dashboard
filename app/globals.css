@@ -1,6 +1,29 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* Primary Colors */
+  --color-deep-navy: #1a2b4b;
+  --color-navy-light: #364768;
+  --color-biwa-blue: #0a3358;
+  --color-sky-blue: #006399;
+
+  /* Semantic Colors */
+  --color-surface-ice: #e8f2f8;
+  --color-warning-amber: #d97706;
+  --color-critical-red: #dc2626;
+
+  /* Text Colors */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #64748b;
+
+  /* Neutral */
+  --color-surface: #ffffff;
+  --color-surface-dim: #f2f4f6;
+  --color-border: #e2e8f0;
+  --color-border-subtle: #d0e4f0;
+
+  /* Legacy lake colors */
   --color-lake-50: #f0f7ff;
   --color-lake-100: #e0effd;
   --color-lake-200: #bde0fb;
@@ -24,72 +47,75 @@ html, body {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif;
-  background: #e8f2f8;
-  color: #0f172a;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif;
+  background: var(--color-surface-ice);
+  color: var(--color-text-primary);
 }
 
 /* ===== CARD ===== */
 .card {
-  background: #ffffff;
-  border: 1px solid #d0e4f0;
-  border-radius: 8px;
-  padding: 8px 10px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 2px;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 1px 3px rgba(10,51,88,0.07);
+  box-shadow: 0px 4px 12px rgba(26, 43, 75, 0.05);
 }
 
 .card-label {
-  font-size: 13px;
-  font-weight: 700;
-  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
   letter-spacing: 0.02em;
-  line-height: 1;
-  margin-bottom: 4px;
+  line-height: 1.4;
+  margin-bottom: 6px;
 }
 
 /* big readout number */
 .data-value {
   font-size: 2rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--color-text-primary);
   line-height: 1;
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .data-unit {
   font-size: 0.7rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--color-text-tertiary);
   margin-left: 2px;
 }
 
 .data-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: #64748b;
-  letter-spacing: 0.02em;
-  line-height: 1;
-  margin-bottom: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  margin-bottom: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
 }
 
 /* status pills */
-.pill-ok     { background:#ecfdf5; color:#059669; border:1px solid #6ee7b7; }
-.pill-warn   { background:#fffbeb; color:#d97706; border:1px solid #fcd34d; }
-.pill-danger { background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; }
+.pill-ok     { background: #e6f4ea; color: #059669; border: none; }
+.pill-warn   { background: #fef3c7; color: var(--color-warning-amber); border: none; }
+.pill-danger { background: #fee2e2; color: var(--color-critical-red); border: none; }
 
 .pill {
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  padding: 2px 6px;
-  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 9999px;
   line-height: 1.4;
   white-space: nowrap;
 }

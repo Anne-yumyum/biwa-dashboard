@@ -136,22 +136,23 @@ export function AreaTabs() {
               style={{
                 flex: 1,
                 minWidth: 0,
-                padding: '6px 4px',
-                background: active ? '#0a3358' : 'transparent',
-                color: active ? '#fff' : '#475569',
+                padding: '6px 3px',
+                background: active ? '#1a2b4b' : 'transparent',
+                color: active ? '#ffffff' : '#475569',
                 border: 'none',
-                borderBottom: active ? '2px solid #2d9cdb' : '2px solid transparent',
-                fontSize: 11,
-                fontWeight: 800,
+                borderBottom: active ? '3px solid #006399' : '3px solid transparent',
+                fontSize: 10,
+                fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
+                transition: 'all 0.2s ease',
               }}
             >
-              <span style={{ lineHeight: 1 }}>{area.shortName}</span>
-              <span style={{ fontSize: 8, fontWeight: 600, opacity: 0.7, marginTop: 2, lineHeight: 1 }}>
+              <span style={{ lineHeight: 1.1, fontSize: 12, fontWeight: 800 }}>{area.shortName}</span>
+              <span style={{ fontSize: 7, fontWeight: 500, opacity: 0.6, marginTop: 1, lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
                 {area.name.replace(/^.（|）$/g, '')}
               </span>
             </button>
