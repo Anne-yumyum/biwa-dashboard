@@ -20,9 +20,9 @@ function windColor(speed: number) {
 }
 
 function windStatus(speed: number) {
-  if (speed < 3) return { label: '出船OK', color: 'text-emerald-600' }
-  if (speed < 4) return { label: '要注意', color: 'text-amber-600' }
-  return { label: '取りやめ', color: 'text-red-600' }
+  if (speed < 2.5) return { label: 'イケる', color: 'text-emerald-600' }
+  if (speed < 3.5) return { label: 'ヤバい', color: 'text-amber-600' }
+  return { label: '死ぬで', color: 'text-red-600' }
 }
 
 export default async function WindDetailPage() {
@@ -68,9 +68,9 @@ export default async function WindDetailPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-slate-100 flex gap-4 text-xs">
-              <span className="text-emerald-600 font-semibold">〜3m/s: OK</span>
-              <span className="text-amber-600 font-semibold">3〜4m/s: 注意</span>
-              <span className="text-red-600 font-semibold">4m/s〜: 取りやめ</span>
+              <span className="text-emerald-600 font-semibold">〜2.4: イケる</span>
+              <span className="text-amber-600 font-semibold">2.5〜3.4: ヤバい</span>
+              <span className="text-red-600 font-semibold">3.5〜: 死ぬで</span>
             </div>
           </div>
         ) : (

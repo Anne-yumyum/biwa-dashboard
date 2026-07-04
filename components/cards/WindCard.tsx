@@ -2,9 +2,9 @@ import Link from 'next/link'
 import { fetchWeather, decodeWindDirection, windArrowRotation } from '@/lib/weather'
 
 function windStatus(speed: number) {
-  if (speed < 3) return { label: '出船OK',    cls: 'pill pill-ok',     arrowColor: '#059669', borderColor: '#059669' }
-  if (speed < 4) return { label: '要注意',    cls: 'pill pill-warn',   arrowColor: '#d97706', borderColor: '#d97706' }
-  return             { label: '出船取りやめ', cls: 'pill pill-danger', arrowColor: '#dc2626', borderColor: '#dc2626' }
+  if (speed < 2.5) return { label: 'イケる',  cls: 'pill pill-ok',     arrowColor: '#059669', borderColor: '#059669' }
+  if (speed < 3.5) return { label: 'ヤバい',  cls: 'pill pill-warn',   arrowColor: '#d97706', borderColor: '#d97706' }
+  return             { label: '死ぬで',       cls: 'pill pill-danger', arrowColor: '#dc2626', borderColor: '#dc2626' }
 }
 
 function WindArrow({ deg, color }: { deg: number; color: string }) {

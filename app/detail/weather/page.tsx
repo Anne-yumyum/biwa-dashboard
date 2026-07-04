@@ -43,10 +43,10 @@ export default async function WeatherDetailPage() {
           <div className="card">
             <p className="card-label mb-3">10日間予報</p>
             <div className="space-y-2">
-              {forecastData.map((day, i) => (
+              {forecastData.slice(1).map((day, i) => (
                 <div key={i} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
-                  <p className={`text-sm font-semibold w-24 ${i === 0 ? 'text-lake-700' : 'text-slate-700'}`}>
-                    {i === 0 ? '今日' : day.date}
+                  <p className="text-sm font-semibold w-24 text-slate-700">
+                    {day.date}
                   </p>
                   <div className="flex items-center gap-2">
                     <span className="text-xl">{day.weatherEmoji}</span>
