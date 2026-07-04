@@ -64,7 +64,6 @@ export async function fetchWeather(): Promise<DataResult<WeatherData>> {
 
     const res = await fetch(url.toString(), {
       next: { revalidate: 600 },
-      signal: AbortSignal.timeout(8000),
     })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
 

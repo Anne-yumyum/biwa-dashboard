@@ -1,13 +1,15 @@
 import { Suspense } from 'react'
 import { Header } from '@/components/layout/Header'
-import { SunCard } from '@/components/cards/SunCard'
+import { WindCard } from '@/components/cards/WindCard'
+import { WeatherCard } from '@/components/cards/WeatherCard'
+import { TemperatureCard } from '@/components/cards/TemperatureCard'
+import { LakeLevelCard } from '@/components/cards/LakeLevelCard'
+import { DischargeCard } from '@/components/cards/DischargeCard'
 import { TideCard } from '@/components/cards/TideCard'
+import { SunCard } from '@/components/cards/SunCard'
 import { RefreshTimer } from '@/components/ui/RefreshTimer'
-import { WarningBanner } from '@/components/ui/WarningBanner'
-import { AreaTabs } from '@/components/AreaTabs'
 
-// 5分キャッシュ: 毎リクエストのAPI乱打を防ぐ
-export const revalidate = 300
+export const revalidate = 0
 
 function now() {
   return new Date().toLocaleTimeString('ja-JP', {
@@ -16,49 +18,58 @@ function now() {
 }
 
 function Skeleton() {
-  return <div className="card" style={{ background: '#d0e8f5', animation: 'pulse 1.5s ease-in-out infinite' }} />
+  return <div className="card" style={{ background: '#0d1a27', animation: 'pulse 1.5s ease-in-out infinite' }} />
 }
 
-export default async function DashboardPage() {
+export default function DashboardPage() {
   return (
     <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: '#e8f2f8' }}>
       <Header updatedAt={now()} />
       <RefreshTimer intervalMs={300_000} />
 
-      {/* 警報バナー */}
-      <Suspense fallback={null}>
-        <WarningBanner />
-      </Suspense>
-
-      {/* メインコンテンツ */}
+      {/* ── No-scroll cockpit grid ── */}
       <main style={{
         flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '8px 8px 4px',
+        display: 'grid',
+        gridTemplateRows: '1fr 1fr 1fr 1fr',
+        gridTemplateColumns: '1fr',
         gap: 6,
+        padding: '8px 8px',
         minHeight: 0,
-        overflowY: 'auto',
       }}>
-        {/* エリア別タブ（ブラウザから直接取得） */}
-        <AreaTabs />
+        {/* Row 1: Wind (full width) */}
+        <Suspense fallback={<Skeleton />}>
+          <WindCard />
+        </Suspense>
 
-        {/* 日の出 | 潮汐 */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, flexShrink: 0 }}>
+        {/* Row 2: 天気 | 気温 */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, minHeight: 0 }}>
+          <Suspense fallback={<Skeleton />}><WeatherCard /></Suspense>
+          <Suspense fallback={<Skeleton />}><TemperatureCard /></Suspense>
+        </div>
+
+        {/* Row 3: 日の出 | 潮汐 */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, minHeight: 0 }}>
           <Suspense fallback={<Skeleton />}><SunCard /></Suspense>
           <TideCard />
         </div>
+
+        {/* Row 4: 水位 | 放流量 */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, minHeight: 0 }}>
+          <Suspense fallback={<Skeleton />}><LakeLevelCard /></Suspense>
+          <Suspense fallback={<Skeleton />}><DischargeCard /></Suspense>
+        </div>
       </main>
 
-      {/* フッター */}
+      {/* Footer: data source */}
       <div style={{
-        padding: '5px 8px',
-        paddingBottom: 'max(6px, env(safe-area-inset-bottom))',
+        padding: '6px 8px',
+        paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
         borderTop: '1px solid #c8dde8',
         display: 'flex', alignItems: 'center', gap: 4,
       }}>
         <p style={{ fontSize: 9, color: '#2a4a60', letterSpacing: '0.03em' }}>
-          気象: Open-Meteo　警報: 気象庁　潮汐: 敦賀港（天文計算）
+          気象: Open-Meteo　水位: 国土交通省　潮汐: 敦賀港参考値（天文計算）
         </p>
       </div>
     </div>

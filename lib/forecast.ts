@@ -41,7 +41,7 @@ export async function fetchHourlyWind(): Promise<HourlyWind[]> {
   url.searchParams.set('wind_speed_unit', 'ms')
   url.searchParams.set('forecast_days', '1')
 
-  const res = await fetch(url.toString(), { next: { revalidate: 600 }, signal: AbortSignal.timeout(8000) })
+  const res = await fetch(url.toString(), { next: { revalidate: 600 } })
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   const json = await res.json()
   const h = json.hourly
@@ -73,7 +73,7 @@ export async function fetchWeeklyForecast(): Promise<DailyForecast[]> {
   url.searchParams.set('wind_speed_unit', 'ms')
   url.searchParams.set('forecast_days', '10')
 
-  const res = await fetch(url.toString(), { next: { revalidate: 3600 }, signal: AbortSignal.timeout(8000) })
+  const res = await fetch(url.toString(), { next: { revalidate: 3600 } })
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   const json = await res.json()
   const d = json.daily
