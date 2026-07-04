@@ -1,15 +1,14 @@
 import { Suspense } from 'react'
 import { Header } from '@/components/layout/Header'
-import { WindCard } from '@/components/cards/WindCard'
-import { WeatherCard } from '@/components/cards/WeatherCard'
-import { TemperatureCard } from '@/components/cards/TemperatureCard'
 import { LakeLevelCard } from '@/components/cards/LakeLevelCard'
 import { DischargeCard } from '@/components/cards/DischargeCard'
 import { TideCard } from '@/components/cards/TideCard'
 import { SunCard } from '@/components/cards/SunCard'
 import { RefreshTimer } from '@/components/ui/RefreshTimer'
+import { WarningBanner } from '@/components/ui/WarningBanner'
+import { AreaTabs } from '@/components/AreaTabs'
 
-export const revalidate = 0
+export const revalidate = 300
 
 function now() {
   return new Date().toLocaleTimeString('ja-JP', {
@@ -18,7 +17,7 @@ function now() {
 }
 
 function Skeleton() {
-  return <div className="card" style={{ background: '#0d1a27', animation: 'pulse 1.5s ease-in-out infinite' }} />
+  return <div className="card" style={{ background: '#d0e8f5', animation: 'pulse 1.5s ease-in-out infinite' }} />
 }
 
 export default function DashboardPage() {
@@ -27,35 +26,31 @@ export default function DashboardPage() {
       <Header updatedAt={now()} />
       <RefreshTimer intervalMs={300_000} />
 
-      {/* ── No-scroll cockpit grid ── */}
+      {/* 警報・注意報バナー（発表時のみ表示） */}
+      <Suspense fallback={null}>
+        <WarningBanner />
+      </Suspense>
+
       <main style={{
         flex: 1,
-        display: 'grid',
-        gridTemplateRows: '1fr 1fr 1fr 1fr',
-        gridTemplateColumns: '1fr',
+        display: 'flex',
+        flexDirection: 'column',
         gap: 6,
         padding: '8px 8px',
         minHeight: 0,
+        overflowY: 'auto',
       }}>
-        {/* Row 1: Wind (full width) */}
-        <Suspense fallback={<Skeleton />}>
-          <WindCard />
-        </Suspense>
+        {/* エリア別 風・天気・気温（タブ切り替え） */}
+        <AreaTabs />
 
-        {/* Row 2: 天気 | 気温 */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, minHeight: 0 }}>
-          <Suspense fallback={<Skeleton />}><WeatherCard /></Suspense>
-          <Suspense fallback={<Skeleton />}><TemperatureCard /></Suspense>
-        </div>
-
-        {/* Row 3: 日の出 | 潮汐 */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, minHeight: 0 }}>
+        {/* 日の出 | 潮汐 */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, flexShrink: 0 }}>
           <Suspense fallback={<Skeleton />}><SunCard /></Suspense>
           <TideCard />
         </div>
 
-        {/* Row 4: 水位 | 放流量 */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, minHeight: 0 }}>
+        {/* 水位 | 放流量 */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, flexShrink: 0 }}>
           <Suspense fallback={<Skeleton />}><LakeLevelCard /></Suspense>
           <Suspense fallback={<Skeleton />}><DischargeCard /></Suspense>
         </div>
@@ -69,7 +64,7 @@ export default function DashboardPage() {
         display: 'flex', alignItems: 'center', gap: 4,
       }}>
         <p style={{ fontSize: 9, color: '#2a4a60', letterSpacing: '0.03em' }}>
-          気象: Open-Meteo　水位: 国土交通省　潮汐: 敦賀港参考値（天文計算）
+          気象: Open-Meteo　警報: 気象庁　水位: 国土交通省　潮汐: 敦賀港参考値（天文計算）
         </p>
       </div>
     </div>
