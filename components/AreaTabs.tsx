@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
+import Link from 'next/link'
 import { AREAS } from '@/lib/areas'
 
 interface DailyForecast {
@@ -218,43 +219,21 @@ export function AreaTabs() {
                 </div>
               </div>
 
-              {/* 10日間予報（天気 + 風速） */}
-              <div style={{ marginTop: 10, paddingTop: 8, borderTop: '1px solid #f1f5f9' }}>
-                <p className="data-label" style={{ marginBottom: 4 }}>10日間予報</p>
-                {current.daily.map((day, i) => {
-                  const dst = windStatus(day.windSpeedMax)
-                  const dwx = decodeWeatherCode(day.weatherCode)
-                  return (
-                    <div key={i} style={{
-                      display: 'flex', alignItems: 'center', gap: 6,
-                      padding: '5px 0',
-                      borderBottom: i < current.daily.length - 1 ? '1px solid #f8fafc' : 'none',
-                    }}>
-                      <p style={{
-                        fontSize: 11, fontWeight: 700, width: 62, flexShrink: 0,
-                        color: i === 0 ? '#0a3358' : '#475569',
-                      }}>
-                        {i === 0 ? '今日' : day.date}
-                      </p>
-                      <span style={{ fontSize: 16, flexShrink: 0 }}>{dwx.emoji}</span>
-                      <p style={{ fontSize: 10, color: '#64748b', width: 44, flexShrink: 0 }}>☔{day.precipProbability}%</p>
-                      <p style={{ fontSize: 11, flexShrink: 0, width: 66 }}>
-                        <span style={{ color: '#dc2626', fontWeight: 700 }}>{day.tempMax}</span>
-                        <span style={{ color: '#94a3b8' }}>/</span>
-                        <span style={{ color: '#3b82f6', fontWeight: 700 }}>{day.tempMin}℃</span>
-                      </p>
-                      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <WindArrow deg={day.windDirection} color={dst.color} size={14} />
-                        <p style={{ fontSize: 12, fontWeight: 800, color: dst.color, width: 30, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
-                          {day.windSpeedMax}
-                        </p>
-                        <p style={{ fontSize: 10, fontWeight: 700, color: dst.color, width: 34 }}>{dst.label}</p>
-                      </div>
-                    </div>
-                  )
-                })}
-                <p style={{ fontSize: 9, color: '#94a3b8', marginTop: 4, textAlign: 'right' }}>風速: 日最大 m/s</p>
-              </div>
+              {/* 詳細ページへの導線 */}
+              <Link href={`/area/${activeId}`} style={{
+                display: 'block',
+                marginTop: 10,
+                padding: '8px 0',
+                textAlign: 'center',
+                background: '#f1f5f9',
+                borderRadius: 8,
+                fontSize: 12,
+                fontWeight: 700,
+                color: '#0a3358',
+                textDecoration: 'none',
+              }}>
+                10日間の天気・風向を見る ›
+              </Link>
             </div>
           )
         })()}
