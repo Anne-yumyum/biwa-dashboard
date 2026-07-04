@@ -2,6 +2,16 @@
 import { useState, useEffect, useCallback } from 'react'
 import { AREAS } from '@/lib/areas'
 
+interface DailyForecast {
+  date: string
+  weatherCode: number
+  tempMax: number
+  tempMin: number
+  precipProbability: number
+  windSpeedMax: number
+  windDirection: number
+}
+
 interface AreaData {
   windSpeed: number
   windGust: number
@@ -11,7 +21,10 @@ interface AreaData {
   precipProbability: number
   tempMax: number
   tempMin: number
+  daily: DailyForecast[]
 }
+
+const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土']
 
 function decodeWeatherCode(code: number): { label: string; emoji: string } {
   if (code === 0) return { label: '快晴', emoji: '☀️' }
@@ -62,10 +75,10 @@ export function AreaTabs() {
       url.searchParams.set('latitude', String(area.lat))
       url.searchParams.set('longitude', String(area.lon))
       url.searchParams.set('current', 'temperature_2m,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m')
-      url.searchParams.set('daily', 'temperature_2m_max,temperature_2m_min,precipitation_probability_max')
+      url.searchParams.set('daily', 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,wind_direction_10m_dominant')
       url.searchParams.set('timezone', 'Asia/Tokyo')
       url.searchParams.set('wind_speed_unit', 'ms')
-      url.searchParams.set('forecast_days', '1')
+      url.searchParams.set('forecast_days', '10')
 
       const res = await fetch(url.toString(), { signal: AbortSignal.timeout(10000) })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -84,6 +97,18 @@ export function AreaTabs() {
           precipProbability: d.precipitation_probability_max[0] ?? 0,
           tempMax: Math.round(d.temperature_2m_max[0] * 10) / 10,
           tempMin: Math.round(d.temperature_2m_min[0] * 10) / 10,
+          daily: (d.time as string[]).map((isoDate, i) => {
+            const dt = new Date(isoDate + 'T00:00:00+09:00')
+            return {
+              date: `${dt.getMonth() + 1}/${dt.getDate()}(${WEEKDAYS[dt.getDay()]})`,
+              weatherCode: d.weather_code[i],
+              tempMax: Math.round(d.temperature_2m_max[i] * 10) / 10,
+              tempMin: Math.round(d.temperature_2m_min[i] * 10) / 10,
+              precipProbability: d.precipitation_probability_max[i] ?? 0,
+              windSpeedMax: Math.round(d.wind_speed_10m_max[i] * 10) / 10,
+              windDirection: d.wind_direction_10m_dominant[i],
+            }
+          }),
         },
       }))
     } catch {
@@ -191,6 +216,44 @@ export function AreaTabs() {
                     <span style={{ color: '#3b82f6', fontWeight: 700 }}>{current.tempMin}℃</span>
                   </p>
                 </div>
+              </div>
+
+              {/* 10日間予報（天気 + 風速） */}
+              <div style={{ marginTop: 10, paddingTop: 8, borderTop: '1px solid #f1f5f9' }}>
+                <p className="data-label" style={{ marginBottom: 4 }}>10日間予報</p>
+                {current.daily.map((day, i) => {
+                  const dst = windStatus(day.windSpeedMax)
+                  const dwx = decodeWeatherCode(day.weatherCode)
+                  return (
+                    <div key={i} style={{
+                      display: 'flex', alignItems: 'center', gap: 6,
+                      padding: '5px 0',
+                      borderBottom: i < current.daily.length - 1 ? '1px solid #f8fafc' : 'none',
+                    }}>
+                      <p style={{
+                        fontSize: 11, fontWeight: 700, width: 62, flexShrink: 0,
+                        color: i === 0 ? '#0a3358' : '#475569',
+                      }}>
+                        {i === 0 ? '今日' : day.date}
+                      </p>
+                      <span style={{ fontSize: 16, flexShrink: 0 }}>{dwx.emoji}</span>
+                      <p style={{ fontSize: 10, color: '#64748b', width: 44, flexShrink: 0 }}>☔{day.precipProbability}%</p>
+                      <p style={{ fontSize: 11, flexShrink: 0, width: 66 }}>
+                        <span style={{ color: '#dc2626', fontWeight: 700 }}>{day.tempMax}</span>
+                        <span style={{ color: '#94a3b8' }}>/</span>
+                        <span style={{ color: '#3b82f6', fontWeight: 700 }}>{day.tempMin}℃</span>
+                      </p>
+                      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <WindArrow deg={day.windDirection} color={dst.color} size={14} />
+                        <p style={{ fontSize: 12, fontWeight: 800, color: dst.color, width: 30, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
+                          {day.windSpeedMax}
+                        </p>
+                        <p style={{ fontSize: 10, fontWeight: 700, color: dst.color, width: 34 }}>{dst.label}</p>
+                      </div>
+                    </div>
+                  )
+                })}
+                <p style={{ fontSize: 9, color: '#94a3b8', marginTop: 4, textAlign: 'right' }}>風速: 日最大 m/s</p>
               </div>
             </div>
           )
