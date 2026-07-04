@@ -1,3 +1,5 @@
+export const revalidate = 600
+
 import { notFound } from 'next/navigation'
 import { getArea } from '@/lib/areas'
 import { fetchAreaWeather } from '@/lib/areaWeather'

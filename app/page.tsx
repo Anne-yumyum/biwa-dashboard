@@ -5,10 +5,9 @@ import { TideCard } from '@/components/cards/TideCard'
 import { RefreshTimer } from '@/components/ui/RefreshTimer'
 import { WarningBanner } from '@/components/ui/WarningBanner'
 import { BiwaLakeMap } from '@/components/map/BiwaLakeMap'
-import { AREAS } from '@/lib/areas'
-import { fetchAreaWeather } from '@/lib/areaWeather'
 
-export const revalidate = 0
+// 5分キャッシュ: 毎リクエストのAPI乱打を防ぐ
+export const revalidate = 300
 
 function now() {
   return new Date().toLocaleTimeString('ja-JP', {
@@ -21,18 +20,6 @@ function Skeleton() {
 }
 
 export default async function DashboardPage() {
-  // 4エリアの風速を並列取得
-  const windResults = await Promise.allSettled(
-    AREAS.map(area => fetchAreaWeather(area.lat, area.lon))
-  )
-  const areaWinds: Record<string, number> = {}
-  AREAS.forEach((area, i) => {
-    const r = windResults[i]
-    if (r.status === 'fulfilled' && r.value) {
-      areaWinds[area.id] = r.value.windSpeed
-    }
-  })
-
   return (
     <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: '#e8f2f8' }}>
       <Header updatedAt={now()} />
@@ -56,9 +43,9 @@ export default async function DashboardPage() {
         {/* 琵琶湖マップ */}
         <div className="card" style={{ flex: '0 0 auto', padding: '10px 8px 8px' }}>
           <p className="card-label" style={{ marginBottom: 6, fontSize: 12 }}>
-            🗾 琵琶湖（北湖）エリア選択
+            🗾 琵琶湖 エリア選択
           </p>
-          <BiwaLakeMap areaWinds={areaWinds} />
+          <BiwaLakeMap />
           <p style={{ fontSize: 9, color: '#94a3b8', textAlign: 'center', marginTop: 4 }}>
             エリアをタップして詳細を確認
           </p>
