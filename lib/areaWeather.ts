@@ -35,7 +35,10 @@ export async function fetchAreaWeather(lat: number, lon: number): Promise<AreaWe
     url.searchParams.set('wind_speed_unit', 'ms')
     url.searchParams.set('forecast_days', '1')
 
-    const res = await fetch(url.toString(), { next: { revalidate: 600 } })
+    const res = await fetch(url.toString(), {
+      next: { revalidate: 600 },
+      signal: AbortSignal.timeout(8000),
+    })
     if (!res.ok) return null
     const json = await res.json()
     const c = json.current

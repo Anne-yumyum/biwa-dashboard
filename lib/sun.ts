@@ -16,7 +16,7 @@ export async function fetchSun(): Promise<DataResult<SunData>> {
     url.searchParams.set('timezone', 'Asia/Tokyo')
     url.searchParams.set('forecast_days', '1')
 
-    const res = await fetch(url.toString(), { next: { revalidate: 86400 } })
+    const res = await fetch(url.toString(), { next: { revalidate: 86400 }, signal: AbortSignal.timeout(8000) })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
     const json = await res.json()

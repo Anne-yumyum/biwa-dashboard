@@ -25,7 +25,7 @@ const TARGET_AREAS = ['250010', '250020', '250030', '250040', '250050']
 export async function fetchWarnings(): Promise<WarningItem[]> {
   try {
     const url = 'https://www.jma.go.jp/bosai/warning/data/warning/250000.json'
-    const res = await fetch(url, { next: { revalidate: 300 } })
+    const res = await fetch(url, { next: { revalidate: 300 }, signal: AbortSignal.timeout(8000) })
     if (!res.ok) return []
 
     const json = await res.json()
