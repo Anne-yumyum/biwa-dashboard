@@ -13,6 +13,11 @@ interface DailyForecast {
   windDirection: number
 }
 
+interface HourlyWind {
+  time: string
+  direction: number
+}
+
 interface AreaData {
   windSpeed: number
   windGust: number
@@ -23,6 +28,7 @@ interface AreaData {
   tempMax: number
   tempMin: number
   daily: DailyForecast[]
+  hourly: HourlyWind[]
 }
 
 const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土']
@@ -76,6 +82,7 @@ export function AreaTabs() {
       url.searchParams.set('latitude', String(area.lat))
       url.searchParams.set('longitude', String(area.lon))
       url.searchParams.set('current', 'temperature_2m,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m')
+      url.searchParams.set('hourly', 'wind_direction_10m')
       url.searchParams.set('daily', 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,wind_direction_10m_dominant')
       url.searchParams.set('timezone', 'Asia/Tokyo')
       url.searchParams.set('wind_speed_unit', 'ms')
@@ -86,6 +93,7 @@ export function AreaTabs() {
       const json = await res.json()
       const c = json.current
       const d = json.daily
+      const h = json.hourly
 
       setData(prev => ({
         ...prev,
@@ -110,6 +118,10 @@ export function AreaTabs() {
               windDirection: d.wind_direction_10m_dominant[i],
             }
           }),
+          hourly: (h.time as string[]).slice(0, 24).map((time, i) => ({
+            time: time.slice(11, 16),
+            direction: h.wind_direction_10m[i],
+          })),
         },
       }))
     } catch {
@@ -222,6 +234,19 @@ export function AreaTabs() {
                     <span style={{ color: '#94a3b8' }}> / </span>
                     <span style={{ color: '#3b82f6', fontWeight: 700 }}>{current.tempMin}℃</span>
                   </p>
+                </div>
+              </div>
+
+              {/* 1時間ごとの風向き */}
+              <div style={{ marginTop: 12, paddingTop: 8, borderTop: '1px solid #f1f5f9' }}>
+                <p className="data-label" style={{ marginBottom: 6 }}>今日の風向き</p>
+                <div style={{ display: 'flex', gap: 4, overflowX: 'auto', paddingBottom: 4 }}>
+                  {current.hourly.map((h, i) => (
+                    <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
+                      <p style={{ fontSize: 9, color: '#94a3b8', fontWeight: 600, marginBottom: 2 }}>{h.time}</p>
+                      <WindArrow deg={h.direction} color="#334155" size={20} />
+                    </div>
+                  ))}
                 </div>
               </div>
 
