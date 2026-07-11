@@ -243,7 +243,10 @@ export function AreaTabs() {
 
               {/* 1時間ごとの風向き */}
               <div style={{ marginTop: 12, paddingTop: 8, borderTop: '1px solid #f1f5f9' }}>
-                <p className="data-label" style={{ marginBottom: 6 }}>今日の風向き</p>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 6 }}>
+                  <p className="data-label" style={{ marginBottom: 0 }}>今日の風向き</p>
+                  <p style={{ fontSize: 9, color: '#94a3b8' }}>上段: 風速 / 下段: 突風 (m/s)</p>
+                </div>
                 <div style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 6, alignItems: 'flex-start' }}>
                   {current.hourly.map((h, i) => {
                     let color = '#059669'
