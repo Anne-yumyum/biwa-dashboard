@@ -16,6 +16,8 @@ interface DailyForecast {
 interface HourlyWind {
   time: string
   direction: number
+  speed: number
+  gust: number
 }
 
 interface AreaData {
@@ -82,7 +84,7 @@ export function AreaTabs() {
       url.searchParams.set('latitude', String(area.lat))
       url.searchParams.set('longitude', String(area.lon))
       url.searchParams.set('current', 'temperature_2m,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m')
-      url.searchParams.set('hourly', 'wind_direction_10m')
+      url.searchParams.set('hourly', 'wind_direction_10m,wind_speed_10m,wind_gusts_10m')
       url.searchParams.set('daily', 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,wind_direction_10m_dominant')
       url.searchParams.set('timezone', 'Asia/Tokyo')
       url.searchParams.set('wind_speed_unit', 'ms')
@@ -121,6 +123,8 @@ export function AreaTabs() {
           hourly: (h.time as string[]).slice(0, 24).map((time, i) => ({
             time: time.slice(11, 16),
             direction: h.wind_direction_10m[i],
+            speed: Math.round(h.wind_speed_10m[i] * 10) / 10,
+            gust: Math.round(h.wind_gusts_10m[i] * 10) / 10,
           })),
         },
       }))
@@ -239,14 +243,23 @@ export function AreaTabs() {
 
               {/* 1時間ごとの風向き */}
               <div style={{ marginTop: 12, paddingTop: 8, borderTop: '1px solid #f1f5f9' }}>
-                <p className="data-label" style={{ marginBottom: 6 }}>今日の風向き</p>
-                <div style={{ display: 'flex', gap: 4, overflowX: 'auto', paddingBottom: 4 }}>
-                  {current.hourly.map((h, i) => (
-                    <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
-                      <p style={{ fontSize: 9, color: '#94a3b8', fontWeight: 600, marginBottom: 2 }}>{h.time}</p>
-                      <WindArrow deg={h.direction} color="#334155" size={20} />
-                    </div>
-                  ))}
+                <p className="data-label" style={{ marginBottom: 4 }}>今日の風向き</p>
+                <div style={{ display: 'flex', gap: 2, overflowX: 'auto', paddingBottom: 4 }}>
+                  {current.hourly.map((h, i) => {
+                    let color = '#059669'
+                    if (h.speed >= 2.5 && h.speed < 3.5) color = '#d97706'
+                    if (h.speed >= 3.5) color = '#dc2626'
+                    return (
+                      <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, gap: 1 }}>
+                        <p style={{ fontSize: 8, color: '#94a3b8', fontWeight: 600, lineHeight: 1 }}>{h.time}</p>
+                        <WindArrow deg={h.direction} color={color} size={16} />
+                        <div style={{ textAlign: 'center', lineHeight: 1 }}>
+                          <p style={{ fontSize: 8, fontWeight: 700, color, fontVariantNumeric: 'tabular-nums' }}>{h.speed}</p>
+                          <p style={{ fontSize: 7, color: '#94a3b8', fontVariantNumeric: 'tabular-nums' }}>{h.gust}</p>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
 
