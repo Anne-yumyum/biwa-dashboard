@@ -140,7 +140,7 @@ export function AreaTabs() {
   const current = data[activeId]
 
   return (
-    <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+    <div className="card" style={{ padding: 0, overflow: 'hidden', flexShrink: 0, justifyContent: 'flex-start' }}>
       {/* タブバー */}
       <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0' }}>
         {AREAS.map(area => {

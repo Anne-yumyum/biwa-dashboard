@@ -40,6 +40,7 @@ export default function DashboardPage() {
         padding: '8px 8px',
         minHeight: 0,
         overflowY: 'auto',
+        WebkitOverflowScrolling: 'touch',
       }}>
         {/* エリア別 風・天気・気温（タブ切り替え） */}
         <AreaTabs />
