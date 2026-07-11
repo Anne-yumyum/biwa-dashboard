@@ -243,19 +243,19 @@ export function AreaTabs() {
 
               {/* 1時間ごとの風向き */}
               <div style={{ marginTop: 12, paddingTop: 8, borderTop: '1px solid #f1f5f9' }}>
-                <p className="data-label" style={{ marginBottom: 4 }}>今日の風向き</p>
-                <div style={{ display: 'flex', gap: 2, overflowX: 'auto', paddingBottom: 4 }}>
+                <p className="data-label" style={{ marginBottom: 6 }}>今日の風向き</p>
+                <div style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 6, alignItems: 'flex-start' }}>
                   {current.hourly.map((h, i) => {
                     let color = '#059669'
                     if (h.speed >= 2.5 && h.speed < 3.5) color = '#d97706'
                     if (h.speed >= 3.5) color = '#dc2626'
                     return (
-                      <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, gap: 1 }}>
-                        <p style={{ fontSize: 8, color: '#94a3b8', fontWeight: 600, lineHeight: 1 }}>{h.time}</p>
-                        <WindArrow deg={h.direction} color={color} size={16} />
-                        <div style={{ textAlign: 'center', lineHeight: 1 }}>
-                          <p style={{ fontSize: 8, fontWeight: 700, color, fontVariantNumeric: 'tabular-nums' }}>{h.speed}</p>
-                          <p style={{ fontSize: 7, color: '#94a3b8', fontVariantNumeric: 'tabular-nums' }}>{h.gust}</p>
+                      <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, gap: 2, minWidth: 40 }}>
+                        <p style={{ fontSize: 9, color: '#94a3b8', fontWeight: 600, lineHeight: 1 }}>{h.time}</p>
+                        <WindArrow deg={h.direction} color={color} size={18} />
+                        <div style={{ textAlign: 'center', lineHeight: 1.1, minHeight: 28 }}>
+                          <p style={{ fontSize: 10, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums', margin: '2px 0' }}>{h.speed}</p>
+                          <p style={{ fontSize: 9, fontWeight: 600, color: '#94a3b8', fontVariantNumeric: 'tabular-nums', margin: '0' }}>{h.gust}</p>
                         </div>
                       </div>
                     )
