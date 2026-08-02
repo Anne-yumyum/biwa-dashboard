@@ -2,13 +2,13 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "琵琶湖コンディション for ビワマスガイド",
+  title: "ビワマスナビ",
   description: "琵琶湖の風・天気・水位・放流量を一画面で確認できるビワマスガイド向け出船前チェックアプリ",
-  manifest: "/manifest.json",
+  manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "琵琶湖コンディション",
+    title: "ビワマスナビ",
   },
 };
 

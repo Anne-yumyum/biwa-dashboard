@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: '琵琶湖ビワマスコンディション',
-    short_name: '琵琶湖コンディション',
+    name: 'ビワマスナビ',
+    short_name: 'ビワマスナビ',
     description: '出船前チェック - 風・天気・水位・水温',
     start_url: '/',
     display: 'standalone',
