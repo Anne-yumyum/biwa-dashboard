@@ -1,9 +1,9 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import {
-  loadMemos, deleteMemo, importMemos, memoToText, lineShareUrl, formatDateTime, type Memo,
+  loadMemos, deleteMemo, importMemos, memoToText, formatDateTime, formatLatLon, catchSummary, type Memo,
 } from '@/lib/memo'
-import { ShareButtons } from './ShareButtons'
+import { CopyButton } from './CopyButton'
 
 export function MemoList() {
   const [memos, setMemos] = useState<Memo[] | null>(null)
@@ -73,14 +73,10 @@ export function MemoList() {
               <p style={{ fontSize: 12, color: '#64748b', fontWeight: 600 }}>{formatDateTime(m.createdAt)}・{c.area}</p>
               <button onClick={() => remove(m.id)} aria-label="削除" style={{ border: 'none', background: 'none', color: '#94a3b8', fontSize: 12 }}>削除</button>
             </div>
-            <p style={{ fontSize: 17, fontWeight: 800, color: '#0f172a' }}>
-              {m.fish} {m.count}匹{m.size ? ` / ${m.size}cm` : ''}
-            </p>
-            <p style={{ fontSize: 13, color: '#334155' }}>
-              📍 {m.spot || 'スポット未入力'}
-              {m.lat !== undefined && m.lon !== undefined && (
-                <a href={`https://maps.google.com/?q=${m.lat},${m.lon}`} target="_blank" rel="noopener noreferrer" style={{ marginLeft: 6, color: '#006399', fontSize: 12 }}>地図 ↗</a>
-              )}
+            <p style={{ fontSize: 17, fontWeight: 800, color: '#0f172a' }}>{catchSummary(m)}</p>
+            <p style={{ fontSize: 13, color: '#334155' }}>📍 {m.spot || 'スポット未入力'}</p>
+            <p style={{ fontSize: 12, color: '#334155', fontVariantNumeric: 'tabular-nums' }}>
+              🧭 {formatLatLon(m) ?? '位置なし'}
             </p>
             {m.tackle && <p style={{ fontSize: 13, color: '#334155' }}>🎣 {m.tackle}</p>}
             <p style={{ fontSize: 12, color: '#64748b' }}>
@@ -89,7 +85,7 @@ export function MemoList() {
             {(c.tideHigh || c.tideLow) && <p style={{ fontSize: 12, color: '#64748b' }}>🌊 満潮{c.tideHigh ?? '-'} / 干潮{c.tideLow ?? '-'}</p>}
             {m.note && <p style={{ fontSize: 13, color: '#334155' }}>📝 {m.note}</p>}
             <div style={{ marginTop: 4 }}>
-              <ShareButtons compact text={memoToText(m)} lineUrl={lineShareUrl(memoToText(m))} />
+              <CopyButton compact text={memoToText(m)} />
             </div>
           </div>
         )

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { RefreshButton } from '@/components/ui/RefreshTimer'
 
 interface HeaderProps {
@@ -30,6 +31,18 @@ export function Header({ updatedAt }: HeaderProps) {
             </p>
           </div>
           <RefreshButton />
+          <Link
+            href="/memo"
+            aria-label="釣果メモ一覧"
+            style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+              minWidth: 44, height: 44, borderRadius: 10,
+              background: 'rgba(255,255,255,0.12)', color: '#ffffff', textDecoration: 'none',
+            }}
+          >
+            <span style={{ fontSize: 17, lineHeight: 1 }}>📝</span>
+            <span style={{ fontSize: 9, fontWeight: 700, marginTop: 2 }}>メモ</span>
+          </Link>
         </div>
       </div>
     </header>

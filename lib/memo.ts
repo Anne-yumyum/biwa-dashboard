@@ -17,7 +17,9 @@ export interface Memo {
   spot: string
   fish: string
   count: number
-  size: string
+  sizes?: string[]
+  /** 旧形式（1件に1サイズ）。読み込み互換のため残す */
+  size?: string
   tackle: string
   note: string
   conditions: MemoConditions
@@ -66,6 +68,21 @@ export function formatDateTime(iso: string): string {
   })
 }
 
+export function memoSizes(m: Memo): string[] {
+  if (m.sizes) return m.sizes.filter(s => s.trim() !== '')
+  return m.size ? [m.size] : []
+}
+
+export function catchSummary(m: Memo): string {
+  const sizes = memoSizes(m)
+  return `${m.fish} ${m.count}匹${sizes.length ? `（${sizes.map(s => `${s}cm`).join('・')}）` : ''}`
+}
+
+export function formatLatLon(m: Memo): string | null {
+  if (m.lat === undefined || m.lon === undefined) return null
+  return `北緯 ${m.lat.toFixed(5)}° / 東経 ${m.lon.toFixed(5)}°`
+}
+
 export function memoToText(m: Memo): string {
   const c = m.conditions
   const lines = [
@@ -73,10 +90,9 @@ export function memoToText(m: Memo): string {
     `📅 ${formatDateTime(m.createdAt)}`,
     `📍 ${m.spot || '（スポット未入力）'}（${c.area}）`,
   ]
-  if (m.lat !== undefined && m.lon !== undefined) {
-    lines.push(`🗺 https://maps.google.com/?q=${m.lat.toFixed(5)},${m.lon.toFixed(5)}`)
-  }
-  lines.push(`🐟 ${m.fish} ${m.count}匹${m.size ? ` / ${m.size}cm` : ''}`)
+  const ll = formatLatLon(m)
+  if (ll) lines.push(`🧭 ${ll}`)
+  lines.push(`🐟 ${catchSummary(m)}`)
   if (m.tackle) lines.push(`🎣 ${m.tackle}`)
   const wind = c.windSpeed !== undefined
     ? `🌬 ${c.windDirection ?? ''} ${c.windSpeed}m/s（突風${c.windGust ?? '-'}m/s）`
@@ -86,8 +102,4 @@ export function memoToText(m: Memo): string {
   if (c.tideHigh || c.tideLow) lines.push(`🌊 満潮${c.tideHigh ?? '-'} / 干潮${c.tideLow ?? '-'}`)
   if (m.note) lines.push(`📝 ${m.note}`)
   return lines.join('\n')
-}
-
-export function lineShareUrl(text: string): string {
-  return `https://line.me/R/msg/text/?${encodeURIComponent(text)}`
 }

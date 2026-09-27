@@ -1,10 +1,8 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { addMemo, memoToText, lineShareUrl, type Memo, type MemoConditions } from '@/lib/memo'
-import { ShareButtons } from './ShareButtons'
-
-const FISH = ['ビワマス', 'ブラックバス', 'ブルーギル', 'ニゴイ', 'その他']
+import { addMemo, memoToText, type Memo, type MemoConditions } from '@/lib/memo'
+import { CopyButton } from './CopyButton'
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -24,9 +22,19 @@ export function MemoFab({ conditions }: { conditions: MemoConditions }) {
   const [open, setOpen] = useState(false)
   const [gps, setGps] = useState<GpsState>(null)
   const [spot, setSpot] = useState('')
-  const [fish, setFish] = useState(FISH[0])
-  const [count, setCount] = useState(1)
-  const [size, setSize] = useState('')
+  const [sizes, setSizes] = useState<string[]>([''])
+  const count = sizes.length
+
+  function changeCount(delta: number) {
+    setSizes(prev => {
+      const next = Math.max(0, prev.length + delta)
+      return next > prev.length ? [...prev, ''] : prev.slice(0, next)
+    })
+  }
+
+  function setSizeAt(i: number, v: string) {
+    setSizes(prev => prev.map((s, j) => (j === i ? v : s)))
+  }
   const [tackle, setTackle] = useState('')
   const [note, setNote] = useState('')
   const [saved, setSaved] = useState<Memo | null>(null)
@@ -48,19 +56,23 @@ export function MemoFab({ conditions }: { conditions: MemoConditions }) {
   function close() {
     setOpen(false)
     if (saved) {
-      setSpot(''); setCount(1); setSize(''); setTackle(''); setNote('')
+      setSpot(''); setSizes(['']); setTackle(''); setNote('')
       setSaved(null)
     }
   }
 
   function save() {
-    if (count < 0) { setError('匹数は0以上で入力'); return }
+    if (sizes.some(s => s.trim() !== '' && !/^\d+(\.\d+)?$/.test(s.trim()))) {
+      setError('サイズは数字で入力してください')
+      return
+    }
     const memo: Memo = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       createdAt: new Date().toISOString(),
       lat: typeof gps === 'object' && gps ? gps.lat : undefined,
       lon: typeof gps === 'object' && gps ? gps.lon : undefined,
-      spot: spot.trim(), fish, count, size: size.trim(), tackle: tackle.trim(), note: note.trim(),
+      spot: spot.trim(), fish: 'ビワマス', count, sizes: sizes.map(s => s.trim()),
+      tackle: tackle.trim(), note: note.trim(),
       conditions,
     }
     if (!addMemo(memo)) { setError('保存できませんでした（端末の容量を確認）'); return }
@@ -111,7 +123,7 @@ export function MemoFab({ conditions }: { conditions: MemoConditions }) {
                   fontSize: 12, whiteSpace: 'pre-wrap', background: '#fff', border: '1px solid #d0e4f0',
                   borderRadius: 10, padding: 10, color: '#334155', fontFamily: 'inherit',
                 }}>{memoToText(saved)}</pre>
-                <ShareButtons text={memoToText(saved)} lineUrl={lineShareUrl(memoToText(saved))} />
+                <CopyButton text={memoToText(saved)} />
                 <div style={{ display: 'flex', gap: 8 }}>
                   <Link href="/memo" style={{ flex: 1, textAlign: 'center', padding: 12, borderRadius: 10, background: '#fff', border: '1px solid #1a2b4b', color: '#1a2b4b', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>
                     メモ一覧
@@ -129,38 +141,39 @@ export function MemoFab({ conditions }: { conditions: MemoConditions }) {
                 </div>
 
                 <div style={{ fontSize: 11, color: '#475569', background: '#e8f2f8', borderRadius: 10, padding: '8px 10px', lineHeight: 1.6 }}>
-                  <p>📍 {gps === 'loading' ? '位置を取得中…' : gps === 'denied' || gps === null ? '位置なし（許可されていません）' : `${gps.lat.toFixed(4)}, ${gps.lon.toFixed(4)}`}</p>
+                  <p>🧭 {gps === 'loading' ? '位置を取得中…' : gps === 'denied' || gps === null ? '位置なし（許可されていません）' : `北緯 ${gps.lat.toFixed(5)}° / 東経 ${gps.lon.toFixed(5)}°`}</p>
                   <p>🌬 {conditions.area}　{conditions.windDirection ?? ''} {conditions.windSpeed ?? '-'}m/s（突風{conditions.windGust ?? '-'}）　{conditions.weather ?? ''}</p>
                 </div>
 
                 <div>
-                  <p style={labelStyle}>魚種</p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                    {FISH.map(f => (
-                      <button key={f} onClick={() => setFish(f)} style={{
-                        padding: '8px 12px', borderRadius: 9999, fontSize: 13, fontWeight: 700,
-                        border: f === fish ? '1px solid #1a2b4b' : '1px solid #d0e4f0',
-                        background: f === fish ? '#1a2b4b' : '#fff',
-                        color: f === fish ? '#fff' : '#475569',
-                      }}>{f}</button>
-                    ))}
+                  <p style={labelStyle}>ビワマス 匹数</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <button onClick={() => changeCount(-1)} aria-label="1匹減らす" style={{ width: 48, height: 44, borderRadius: 10, border: '1px solid #d0e4f0', background: '#fff', fontSize: 22 }}>−</button>
+                    <p style={{ flex: 1, textAlign: 'center', fontSize: 24, fontWeight: 800 }}>{count}<span style={{ fontSize: 13, color: '#64748b', marginLeft: 2 }}>匹</span></p>
+                    <button onClick={() => changeCount(1)} aria-label="1匹増やす" style={{ width: 48, height: 44, borderRadius: 10, border: '1px solid #d0e4f0', background: '#fff', fontSize: 22 }}>＋</button>
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: 10 }}>
-                  <div style={{ flex: 1 }}>
-                    <p style={labelStyle}>匹数</p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <button onClick={() => setCount(c => Math.max(0, c - 1))} style={{ width: 44, height: 44, borderRadius: 10, border: '1px solid #d0e4f0', background: '#fff', fontSize: 22 }}>−</button>
-                      <p style={{ flex: 1, textAlign: 'center', fontSize: 22, fontWeight: 800 }}>{count}</p>
-                      <button onClick={() => setCount(c => c + 1)} style={{ width: 44, height: 44, borderRadius: 10, border: '1px solid #d0e4f0', background: '#fff', fontSize: 22 }}>＋</button>
+                {count > 0 && (
+                  <div>
+                    <p style={labelStyle}>サイズ (cm)</p>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 6 }}>
+                      {sizes.map((s, i) => (
+                        <div key={i} style={{ position: 'relative' }}>
+                          <span style={{ position: 'absolute', left: 8, top: 4, fontSize: 9, fontWeight: 700, color: '#94a3b8' }}>{i + 1}匹目</span>
+                          <input
+                            inputMode="decimal"
+                            value={s}
+                            onChange={e => setSizeAt(i, e.target.value)}
+                            placeholder="45"
+                            aria-label={`${i + 1}匹目のサイズ`}
+                            style={{ ...inputStyle, padding: '16px 8px 6px', textAlign: 'center' }}
+                          />
+                        </div>
+                      ))}
                     </div>
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <p style={labelStyle}>サイズ (cm)</p>
-                    <input inputMode="decimal" value={size} onChange={e => setSize(e.target.value)} placeholder="45" style={inputStyle} />
-                  </div>
-                </div>
+                )}
 
                 <div>
                   <p style={labelStyle}>スポット名</p>
