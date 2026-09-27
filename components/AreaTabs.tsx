@@ -2,6 +2,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { AREAS } from '@/lib/areas'
+import { calculateTides } from '@/lib/tide'
+import { MemoFab } from '@/components/memo/MemoFab'
+import type { MemoConditions } from '@/lib/memo'
 
 interface DailyForecast {
   date: string
@@ -140,8 +143,27 @@ export function AreaTabs({ children }: { children?: React.ReactNode }) {
   const current = data[activeId]
   const activeArea = AREAS.find(a => a.id === activeId)!
 
+  function buildConditions(): MemoConditions {
+    const tides = calculateTides(new Date())
+    const entries = tides.success ? tides.data.entries : []
+    const cond: MemoConditions = {
+      area: activeArea.name,
+      tideHigh: entries.find(e => e.type === 'high')?.time,
+      tideLow: entries.find(e => e.type === 'low')?.time,
+    }
+    if (current && current !== 'error') {
+      cond.windSpeed = current.windSpeed
+      cond.windGust = current.windGust
+      cond.windDirection = decodeWindDirection(current.windDirection)
+      cond.weather = decodeWeatherCode(current.weatherCode).label
+      cond.temperature = current.temperature
+    }
+    return cond
+  }
+
   return (
-    <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+    <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      <MemoFab conditions={buildConditions()} />
       <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 6, padding: '8px 10px 6px' }}>
       <div className="card" style={{ padding: '10px 12px', flexShrink: 0, justifyContent: 'flex-start' }}>
         <p style={{ fontSize: 11, fontWeight: 700, color: '#64748b', marginBottom: 2 }}>
