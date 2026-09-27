@@ -72,7 +72,7 @@ function WindArrow({ deg, color, size = 40 }: { deg: number; color: string; size
   )
 }
 
-export function AreaTabs() {
+export function AreaTabs({ children }: { children?: React.ReactNode }) {
   const [activeId, setActiveId] = useState(AREAS[0].id)
   const [data, setData] = useState<Record<string, AreaData | 'error' | undefined>>({})
 
@@ -138,51 +138,20 @@ export function AreaTabs() {
   }, [activeId, data, load])
 
   const current = data[activeId]
+  const activeArea = AREAS.find(a => a.id === activeId)!
 
   return (
-    <div className="card" style={{ padding: 0, overflow: 'hidden', flexShrink: 0, justifyContent: 'flex-start' }}>
-      {/* タブバー */}
-      <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0' }}>
-        {AREAS.map(area => {
-          const active = area.id === activeId
-          return (
-            <button
-              key={area.id}
-              onClick={() => setActiveId(area.id)}
-              style={{
-                flex: 1,
-                minWidth: 0,
-                padding: '6px 3px',
-                background: active ? '#1a2b4b' : 'transparent',
-                color: active ? '#ffffff' : '#475569',
-                border: 'none',
-                borderBottom: active ? '3px solid #006399' : '3px solid transparent',
-                fontSize: 10,
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <span style={{ lineHeight: 1.1, fontSize: 12, fontWeight: 800 }}>{area.shortName}</span>
-              <span style={{ fontSize: 7, fontWeight: 500, opacity: 0.6, marginTop: 1, lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
-                {area.name.replace(/^.（|）$/g, '')}
-              </span>
-            </button>
-          )
-        })}
-      </div>
-
-      {/* コンテンツ */}
-      <div style={{ padding: '12px 14px' }}>
+    <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 6, padding: '8px 10px 6px' }}>
+      <div className="card" style={{ padding: '10px 12px', flexShrink: 0, justifyContent: 'flex-start' }}>
+        <p style={{ fontSize: 11, fontWeight: 700, color: '#64748b', marginBottom: 2 }}>
+          {activeArea.name}
+        </p>
         {current === undefined && (
-          <p style={{ color: '#94a3b8', fontSize: 13, textAlign: 'center', padding: '24px 0' }}>読み込み中…</p>
+          <p style={{ color: '#94a3b8', fontSize: 13, textAlign: 'center', padding: '40px 0' }}>読み込み中…</p>
         )}
         {current === 'error' && (
-          <div style={{ textAlign: 'center', padding: '18px 0' }}>
+          <div style={{ textAlign: 'center', padding: '30px 0' }}>
             <p style={{ color: '#94a3b8', fontSize: 13 }}>データ取得できませんでした</p>
             <button
               onClick={() => { setData(prev => ({ ...prev, [activeId]: undefined })) }}
@@ -198,85 +167,77 @@ export function AreaTabs() {
           const wx = decodeWeatherCode(current.weatherCode)
           return (
             <div>
-              {/* 風 */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              {/* 風（ヒーロー） */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                 <div>
-                  <p className="data-label">風速</p>
-                  <p style={{ fontSize: '2.4rem', fontWeight: 800, color: st.color, lineHeight: 1 }}>
-                    {current.windSpeed}<span style={{ fontSize: 13, color: '#64748b', marginLeft: 2 }}>m/s</span>
+                  <p style={{ fontSize: '2.6rem', fontWeight: 800, color: st.color, lineHeight: 1 }}>
+                    {current.windSpeed}<span style={{ fontSize: 13, color: '#64748b', marginLeft: 3 }}>m/s</span>
                   </p>
-                  <p style={{ fontSize: 13, fontWeight: 800, color: st.color, marginTop: 2 }}>{st.label}</p>
+                  <span className={`pill ${st.label === 'イケる' ? 'pill-ok' : st.label === 'ヤバい' ? 'pill-warn' : 'pill-danger'}`}
+                    style={{ display: 'inline-block', marginTop: 4 }}>
+                    {st.label}
+                  </span>
                 </div>
                 <div>
-                  <p className="data-label">最大瞬間</p>
-                  <p style={{ fontSize: '1.6rem', fontWeight: 800, color: '#475569', lineHeight: 1 }}>
+                  <p style={{ fontSize: 11, color: '#64748b', fontWeight: 600 }}>最大瞬間</p>
+                  <p style={{ fontSize: '1.4rem', fontWeight: 800, color: '#475569', lineHeight: 1.1 }}>
                     {current.windGust}<span style={{ fontSize: 11, color: '#94a3b8', marginLeft: 2 }}>m/s</span>
                   </p>
                 </div>
-                <div style={{ marginLeft: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                  <WindArrow deg={current.windDirection} color={st.color} />
+                <div style={{ marginLeft: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <WindArrow deg={current.windDirection} color={st.color} size={36} />
                   <p style={{ fontSize: 12, fontWeight: 700, color: '#334155' }}>{decodeWindDirection(current.windDirection)}</p>
                 </div>
               </div>
 
               {/* 天気・気温 */}
               <div style={{
-                display: 'flex', alignItems: 'center', gap: 14,
-                marginTop: 10, paddingTop: 10, borderTop: '1px solid #f1f5f9',
+                display: 'flex', alignItems: 'center', gap: 10,
+                marginTop: 8, paddingTop: 8, borderTop: '1px solid #f1f5f9',
               }}>
-                <span style={{ fontSize: 34 }}>{wx.emoji}</span>
-                <div>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: '#1e293b' }}>{wx.label}</p>
-                  <p style={{ fontSize: 11, color: '#64748b' }}>降水 {current.precipProbability}%</p>
-                </div>
-                <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
-                  <p style={{ fontSize: '1.7rem', fontWeight: 800, color: '#1e293b', lineHeight: 1 }}>
-                    {current.temperature}<span style={{ fontSize: 13, color: '#64748b' }}>℃</span>
-                  </p>
-                  <p style={{ fontSize: 11, marginTop: 2 }}>
-                    <span style={{ color: '#dc2626', fontWeight: 700 }}>{current.tempMax}</span>
-                    <span style={{ color: '#94a3b8' }}> / </span>
-                    <span style={{ color: '#3b82f6', fontWeight: 700 }}>{current.tempMin}℃</span>
-                  </p>
-                </div>
+                <span style={{ fontSize: 24 }}>{wx.emoji}</span>
+                <p style={{ fontSize: 14, fontWeight: 700, color: '#1e293b' }}>{wx.label}</p>
+                <p style={{ fontSize: 11, color: '#64748b' }}>☔{current.precipProbability}%</p>
+                <p style={{ marginLeft: 'auto', fontSize: 11, textAlign: 'right' }}>
+                  <span style={{ fontSize: 18, fontWeight: 800, color: '#1e293b' }}>{current.temperature}℃</span>{' '}
+                  <span style={{ color: '#dc2626', fontWeight: 700 }}>{current.tempMax}</span>
+                  <span style={{ color: '#94a3b8' }}>/</span>
+                  <span style={{ color: '#3b82f6', fontWeight: 700 }}>{current.tempMin}</span>
+                </p>
               </div>
 
               {/* 1時間ごとの風向き */}
-              <div style={{ marginTop: 12, paddingTop: 8, borderTop: '1px solid #f1f5f9' }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <p className="data-label" style={{ marginBottom: 0 }}>今日の風向き</p>
+              <div style={{ marginTop: 8, paddingTop: 6, borderTop: '1px solid #f1f5f9' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 4 }}>
+                  <p style={{ fontSize: 11, color: '#64748b', fontWeight: 600 }}>今日の風向き</p>
                   <p style={{ fontSize: 9, color: '#94a3b8' }}>上段: 風速 / 下段: 突風 (m/s)</p>
                 </div>
-                <div style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 6, alignItems: 'flex-start' }}>
+                <div style={{ display: 'flex', gap: 4, overflowX: 'auto', WebkitOverflowScrolling: 'touch', paddingBottom: 8 }}>
                   {current.hourly.map((h, i) => {
-                    let color = '#059669'
-                    if (h.speed >= 2.5 && h.speed < 3.5) color = '#d97706'
-                    if (h.speed >= 3.5) color = '#dc2626'
+                    const color = windStatus(h.speed).color
                     return (
-                      <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, gap: 2, minWidth: 40 }}>
-                        <p style={{ fontSize: 9, color: '#94a3b8', fontWeight: 600, lineHeight: 1 }}>{h.time}</p>
-                        <WindArrow deg={h.direction} color={color} size={18} />
-                        <div style={{ textAlign: 'center', lineHeight: 1.1, minHeight: 28 }}>
-                          <p style={{ fontSize: 10, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums', margin: '2px 0' }}>{h.speed}</p>
-                          <p style={{ fontSize: 9, fontWeight: 600, color: '#94a3b8', fontVariantNumeric: 'tabular-nums', margin: '0' }}>{h.gust}</p>
-                        </div>
+                      <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, minWidth: 34 }}>
+                        <p style={{ fontSize: 9, color: '#94a3b8', fontWeight: 600, lineHeight: 1.2 }}>{h.time.slice(0, 2)}時</p>
+                        <WindArrow deg={h.direction} color={color} size={16} />
+                        <p style={{ fontSize: 10, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums', lineHeight: 1.2 }}>{h.speed}</p>
+                        <p style={{ fontSize: 9, fontWeight: 600, color: '#94a3b8', fontVariantNumeric: 'tabular-nums', lineHeight: 1.2 }}>{h.gust}</p>
                       </div>
                     )
                   })}
                 </div>
               </div>
 
-              {/* 詳細ページへの導線 */}
+              {/* 10日間予報 */}
               <Link href={`/area/${activeId}`} style={{
                 display: 'block',
-                marginTop: 10,
-                padding: '8px 0',
+                marginTop: 8,
+                padding: '7px 0',
                 textAlign: 'center',
-                background: '#f1f5f9',
+                background: '#1a2b4b',
                 borderRadius: 8,
                 fontSize: 12,
                 fontWeight: 700,
-                color: '#0a3358',
+                color: '#ffffff',
                 textDecoration: 'none',
               }}>
                 10日間の天気・風向を見る ›
@@ -285,6 +246,56 @@ export function AreaTabs() {
           )
         })()}
       </div>
+
+      {/* 共通情報グリッド */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 6 }}>
+        {children}
+      </div>
+      </div>
+
+      {/* 下部タブバー（HIG） */}
+      <nav style={{
+        display: 'flex',
+        flexShrink: 0,
+        background: 'rgba(255,255,255,0.96)',
+        borderTop: '1px solid #d0e4f0',
+        paddingBottom: 'max(6px, env(safe-area-inset-bottom))',
+      }}>
+        {AREAS.map(area => {
+          const active = area.id === activeId
+          return (
+            <button
+              key={area.id}
+              onClick={() => setActiveId(area.id)}
+              aria-current={active ? 'page' : undefined}
+              style={{
+                flex: 1,
+                minHeight: 49,
+                padding: '6px 0 2px',
+                background: 'transparent',
+                border: 'none',
+                color: active ? '#006399' : '#94a3b8',
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 1,
+              }}
+            >
+              <span style={{
+                fontSize: 17, fontWeight: 800, lineHeight: 1,
+                width: 30, height: 26, borderRadius: 8,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: active ? '#e0effd' : 'transparent',
+              }}>{area.shortName}</span>
+              <span style={{ fontSize: 10, fontWeight: 600 }}>
+                {area.name.replace(/^.（|）$/g, '')}
+              </span>
+            </button>
+          )
+        })}
+      </nav>
     </div>
   )
 }
