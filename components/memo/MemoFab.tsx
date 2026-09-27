@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { addMemo, memoToText, type Memo, type MemoConditions } from '@/lib/memo'
 import { CopyButton } from './CopyButton'
+import { AREAS } from '@/lib/areas'
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -18,8 +19,16 @@ const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: 
 
 type GpsState = { lat: number; lon: number } | 'loading' | 'denied' | null
 
-export function MemoFab({ conditions }: { conditions: MemoConditions }) {
+interface MemoFabProps {
+  defaultAreaId: string
+  getConditions: (areaId: string) => MemoConditions
+  onSelectArea: (areaId: string) => void
+}
+
+export function MemoFab({ defaultAreaId, getConditions, onSelectArea }: MemoFabProps) {
   const [open, setOpen] = useState(false)
+  const [areaId, setAreaId] = useState(defaultAreaId)
+  const conditions = getConditions(areaId)
   const [gps, setGps] = useState<GpsState>(null)
   const [spot, setSpot] = useState('')
   const [sizes, setSizes] = useState<string[]>([''])
@@ -42,6 +51,7 @@ export function MemoFab({ conditions }: { conditions: MemoConditions }) {
 
   function openSheet() {
     setOpen(true)
+    setAreaId(defaultAreaId)
     setSaved(null)
     setError('')
     if (!navigator.geolocation) { setGps('denied'); return }
@@ -138,6 +148,32 @@ export function MemoFab({ conditions }: { conditions: MemoConditions }) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <p style={{ fontSize: 17, fontWeight: 800, color: '#0f172a' }}>釣果メモ</p>
                   <Link href="/memo" style={{ fontSize: 13, fontWeight: 700, color: '#006399', textDecoration: 'none' }}>一覧 ›</Link>
+                </div>
+
+                <div>
+                  <p style={labelStyle}>エリア</p>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 6 }}>
+                    {AREAS.map(a => {
+                      const on = a.id === areaId
+                      return (
+                        <button
+                          key={a.id}
+                          onClick={() => { setAreaId(a.id); onSelectArea(a.id) }}
+                          aria-pressed={on}
+                          style={{
+                            padding: '8px 0', borderRadius: 10, cursor: 'pointer',
+                            border: on ? '1px solid #1a2b4b' : '1px solid #d0e4f0',
+                            background: on ? '#1a2b4b' : '#fff',
+                            color: on ? '#fff' : '#475569',
+                            display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.2,
+                          }}
+                        >
+                          <span style={{ fontSize: 15, fontWeight: 800 }}>{a.shortName}</span>
+                          <span style={{ fontSize: 10, fontWeight: 600 }}>{a.name.replace(/^.（|）$/g, '')}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
                 </div>
 
                 <div style={{ fontSize: 11, color: '#475569', background: '#e8f2f8', borderRadius: 10, padding: '8px 10px', lineHeight: 1.6 }}>

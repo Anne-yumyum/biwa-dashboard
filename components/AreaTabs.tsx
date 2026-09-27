@@ -143,27 +143,33 @@ export function AreaTabs({ children }: { children?: React.ReactNode }) {
   const current = data[activeId]
   const activeArea = AREAS.find(a => a.id === activeId)!
 
-  function buildConditions(): MemoConditions {
+  function buildConditions(areaId: string): MemoConditions {
+    const area = AREAS.find(a => a.id === areaId) ?? activeArea
+    const areaData = data[area.id]
     const tides = calculateTides(new Date())
     const entries = tides.success ? tides.data.entries : []
     const cond: MemoConditions = {
-      area: activeArea.name,
+      area: area.name,
       tideHigh: entries.find(e => e.type === 'high')?.time,
       tideLow: entries.find(e => e.type === 'low')?.time,
     }
-    if (current && current !== 'error') {
-      cond.windSpeed = current.windSpeed
-      cond.windGust = current.windGust
-      cond.windDirection = decodeWindDirection(current.windDirection)
-      cond.weather = decodeWeatherCode(current.weatherCode).label
-      cond.temperature = current.temperature
+    if (areaData && areaData !== 'error') {
+      cond.windSpeed = areaData.windSpeed
+      cond.windGust = areaData.windGust
+      cond.windDirection = decodeWindDirection(areaData.windDirection)
+      cond.weather = decodeWeatherCode(areaData.weatherCode).label
+      cond.temperature = areaData.temperature
     }
     return cond
   }
 
+  function ensureLoaded(areaId: string) {
+    if (data[areaId] === undefined) load(areaId)
+  }
+
   return (
     <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}>
-      <MemoFab conditions={buildConditions()} />
+      <MemoFab defaultAreaId={activeId} getConditions={buildConditions} onSelectArea={ensureLoaded} />
       <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 6, padding: '8px 10px 6px' }}>
       <div className="card" style={{ padding: '10px 12px', flexShrink: 0, justifyContent: 'flex-start' }}>
         <p style={{ fontSize: 11, fontWeight: 700, color: '#64748b', marginBottom: 2 }}>
