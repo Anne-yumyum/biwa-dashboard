@@ -84,21 +84,19 @@ export function MemoFab({ defaultAreaId, getConditions, onSelectArea }: MemoFabP
         onClick={openSheet}
         aria-label="釣果メモを追加"
         style={{
-          position: 'absolute',
-          right: 16,
-          bottom: 'calc(max(6px, env(safe-area-inset-bottom)) + 62px)',
-          width: 56, height: 56,
-          borderRadius: 28,
+          flexShrink: 0,
+          minHeight: 44,
+          padding: '0 16px',
+          borderRadius: 10,
           border: 'none',
           background: '#1a2b4b',
           color: '#fff',
-          fontSize: 30,
-          lineHeight: 1,
-          boxShadow: '0 6px 16px rgba(26,43,75,0.35)',
+          fontSize: 15,
+          fontWeight: 800,
+          display: 'flex', alignItems: 'center', gap: 4,
           cursor: 'pointer',
-          zIndex: 20,
         }}
-      >＋</button>
+      ><span style={{ fontSize: 22, lineHeight: 1 }}>＋</span>記録</button>
 
       {open && (
         <div

@@ -169,7 +169,6 @@ export function AreaTabs({ children }: { children?: React.ReactNode }) {
 
   return (
     <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}>
-      <MemoFab defaultAreaId={activeId} getConditions={buildConditions} onSelectArea={ensureLoaded} />
       <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 6, padding: '8px 10px 6px' }}>
       <div className="card" style={{ padding: '10px 12px', flexShrink: 0, justifyContent: 'flex-start' }}>
         <p style={{ fontSize: 11, fontWeight: 700, color: '#64748b', marginBottom: 2 }}>
@@ -278,6 +277,18 @@ export function AreaTabs({ children }: { children?: React.ReactNode }) {
       {/* 共通情報グリッド */}
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 6 }}>
         {children}
+      </div>
+
+      {/* 釣果メモ: 一覧 + 記録ボタン */}
+      <div style={{ display: 'flex', gap: 6 }}>
+        <Link href="/memo" style={{
+          flex: 1, minWidth: 0, minHeight: 44, background: '#f2f5f8', borderRadius: 10, padding: '0 10px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', textDecoration: 'none',
+        }}>
+          <span style={{ fontSize: 11, color: '#64748b', fontWeight: 600 }}>📝 釣果メモ</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: '#1a2b4b' }}>過去のメモ ›</span>
+        </Link>
+        <MemoFab defaultAreaId={activeId} getConditions={buildConditions} onSelectArea={ensureLoaded} />
       </div>
       </div>
 
