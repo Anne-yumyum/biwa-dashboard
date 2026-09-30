@@ -96,9 +96,18 @@ export async function MiniDischarge() {
 
 export function MiniDepth() {
   return (
-    <Link href="/detail/depth" style={{ ...cellStyle, gridColumn: '1 / 3', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-      <Label>🗺 琵琶湖 等深線（湖沼図）</Label>
-      <span style={{ fontSize: 12, fontWeight: 700, color: '#0369a1' }}>見る ›</span>
+    <Link href="/detail/depth" style={cellStyle}>
+      <Label>🗺 琵琶湖 等深線</Label>
+      <Value color="#0369a1">湖沼図 ›</Value>
+    </Link>
+  )
+}
+
+export function MiniMemoLink() {
+  return (
+    <Link href="/memo" style={cellStyle}>
+      <Label>📝 釣果メモ</Label>
+      <Value color="#1a2b4b">過去のメモ ›</Value>
     </Link>
   )
 }

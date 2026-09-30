@@ -4,7 +4,7 @@ import { RefreshTimer } from '@/components/ui/RefreshTimer'
 import { WarningBanner } from '@/components/ui/WarningBanner'
 import { AreaTabs } from '@/components/AreaTabs'
 import {
-  MiniSun, MiniTide, MiniLevel, MiniDischarge, MiniDepth, CellSkeleton,
+  MiniSun, MiniTide, MiniLevel, MiniDischarge, MiniDepth, MiniMemoLink, CellSkeleton,
 } from '@/components/cards/MiniCells'
 
 export const revalidate = 300
@@ -31,6 +31,7 @@ export default function DashboardPage() {
         <Suspense fallback={<CellSkeleton />}><MiniLevel /></Suspense>
         <Suspense fallback={<CellSkeleton />}><MiniDischarge /></Suspense>
         <MiniDepth />
+        <MiniMemoLink />
       </AreaTabs>
     </div>
   )

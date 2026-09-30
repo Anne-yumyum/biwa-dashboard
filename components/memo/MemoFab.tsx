@@ -31,19 +31,8 @@ export function MemoFab({ defaultAreaId, getConditions, onSelectArea }: MemoFabP
   const conditions = getConditions(areaId)
   const [gps, setGps] = useState<GpsState>(null)
   const [spot, setSpot] = useState('')
-  const [sizes, setSizes] = useState<string[]>([''])
-  const count = sizes.length
-
-  function changeCount(delta: number) {
-    setSizes(prev => {
-      const next = Math.max(0, prev.length + delta)
-      return next > prev.length ? [...prev, ''] : prev.slice(0, next)
-    })
-  }
-
-  function setSizeAt(i: number, v: string) {
-    setSizes(prev => prev.map((s, j) => (j === i ? v : s)))
-  }
+  const [count, setCount] = useState(1)
+  const [maxSize, setMaxSize] = useState('')
   const [tackle, setTackle] = useState('')
   const [note, setNote] = useState('')
   const [saved, setSaved] = useState<Memo | null>(null)
@@ -66,13 +55,13 @@ export function MemoFab({ defaultAreaId, getConditions, onSelectArea }: MemoFabP
   function close() {
     setOpen(false)
     if (saved) {
-      setSpot(''); setSizes(['']); setTackle(''); setNote('')
+      setSpot(''); setCount(1); setMaxSize(''); setTackle(''); setNote('')
       setSaved(null)
     }
   }
 
   function save() {
-    if (sizes.some(s => s.trim() !== '' && !/^\d+(\.\d+)?$/.test(s.trim()))) {
+    if (maxSize.trim() !== '' && !/^\d+(\.\d+)?$/.test(maxSize.trim())) {
       setError('サイズは数字で入力してください')
       return
     }
@@ -81,7 +70,7 @@ export function MemoFab({ defaultAreaId, getConditions, onSelectArea }: MemoFabP
       createdAt: new Date().toISOString(),
       lat: typeof gps === 'object' && gps ? gps.lat : undefined,
       lon: typeof gps === 'object' && gps ? gps.lon : undefined,
-      spot: spot.trim(), fish: 'ビワマス', count, sizes: sizes.map(s => s.trim()),
+      spot: spot.trim(), fish: 'ビワマス', count, maxSize: maxSize.trim(),
       tackle: tackle.trim(), note: note.trim(),
       conditions,
     }
@@ -181,35 +170,20 @@ export function MemoFab({ defaultAreaId, getConditions, onSelectArea }: MemoFabP
                   <p>🌬 {conditions.area}　{conditions.windDirection ?? ''} {conditions.windSpeed ?? '-'}m/s（突風{conditions.windGust ?? '-'}）　{conditions.weather ?? ''}</p>
                 </div>
 
-                <div>
-                  <p style={labelStyle}>ビワマス 匹数</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <button onClick={() => changeCount(-1)} aria-label="1匹減らす" style={{ width: 48, height: 44, borderRadius: 10, border: '1px solid #d0e4f0', background: '#fff', fontSize: 22 }}>−</button>
-                    <p style={{ flex: 1, textAlign: 'center', fontSize: 24, fontWeight: 800 }}>{count}<span style={{ fontSize: 13, color: '#64748b', marginLeft: 2 }}>匹</span></p>
-                    <button onClick={() => changeCount(1)} aria-label="1匹増やす" style={{ width: 48, height: 44, borderRadius: 10, border: '1px solid #d0e4f0', background: '#fff', fontSize: 22 }}>＋</button>
-                  </div>
-                </div>
-
-                {count > 0 && (
-                  <div>
-                    <p style={labelStyle}>サイズ (cm)</p>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 6 }}>
-                      {sizes.map((s, i) => (
-                        <div key={i} style={{ position: 'relative' }}>
-                          <span style={{ position: 'absolute', left: 8, top: 4, fontSize: 9, fontWeight: 700, color: '#94a3b8' }}>{i + 1}匹目</span>
-                          <input
-                            inputMode="decimal"
-                            value={s}
-                            onChange={e => setSizeAt(i, e.target.value)}
-                            placeholder="45"
-                            aria-label={`${i + 1}匹目のサイズ`}
-                            style={{ ...inputStyle, padding: '16px 8px 6px', textAlign: 'center' }}
-                          />
-                        </div>
-                      ))}
+                <div style={{ display: 'flex', gap: 10 }}>
+                  <div style={{ flex: 1.3 }}>
+                    <p style={labelStyle}>ビワマス 匹数</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <button onClick={() => setCount(c => Math.max(0, c - 1))} aria-label="1匹減らす" style={{ width: 44, height: 44, borderRadius: 10, border: '1px solid #d0e4f0', background: '#fff', fontSize: 22 }}>−</button>
+                      <p style={{ flex: 1, textAlign: 'center', fontSize: 22, fontWeight: 800 }}>{count}<span style={{ fontSize: 12, color: '#64748b', marginLeft: 1 }}>匹</span></p>
+                      <button onClick={() => setCount(c => c + 1)} aria-label="1匹増やす" style={{ width: 44, height: 44, borderRadius: 10, border: '1px solid #d0e4f0', background: '#fff', fontSize: 22 }}>＋</button>
                     </div>
                   </div>
-                )}
+                  <div style={{ flex: 1 }}>
+                    <p style={labelStyle}>最大サイズ (cm)</p>
+                    <input inputMode="decimal" value={maxSize} onChange={e => setMaxSize(e.target.value)} placeholder="52" aria-label="最大サイズ" style={{ ...inputStyle, textAlign: 'center' }} />
+                  </div>
+                </div>
 
                 <div>
                   <p style={labelStyle}>スポット名</p>

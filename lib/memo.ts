@@ -17,8 +17,9 @@ export interface Memo {
   spot: string
   fish: string
   count: number
+  maxSize?: string
+  /** 旧形式（1匹ごとのサイズ / 1件1サイズ）。読み込み互換のため残す */
   sizes?: string[]
-  /** 旧形式（1件に1サイズ）。読み込み互換のため残す */
   size?: string
   tackle: string
   note: string
@@ -68,14 +69,17 @@ export function formatDateTime(iso: string): string {
   })
 }
 
-export function memoSizes(m: Memo): string[] {
-  if (m.sizes) return m.sizes.filter(s => s.trim() !== '')
-  return m.size ? [m.size] : []
+export function memoMaxSize(m: Memo): string | null {
+  if (m.maxSize) return m.maxSize
+  const nums = (m.sizes ?? (m.size ? [m.size] : []))
+    .map(s => parseFloat(s))
+    .filter(n => !isNaN(n))
+  return nums.length ? String(Math.max(...nums)) : null
 }
 
 export function catchSummary(m: Memo): string {
-  const sizes = memoSizes(m)
-  return `${m.fish} ${m.count}匹${sizes.length ? `（${sizes.map(s => `${s}cm`).join('・')}）` : ''}`
+  const max = memoMaxSize(m)
+  return `${m.fish} ${m.count}匹${max ? `（最大${max}cm）` : ''}`
 }
 
 export function formatLatLon(m: Memo): string | null {
